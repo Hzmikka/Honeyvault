@@ -1,0 +1,36 @@
+{
+  "name": "honeyvault-bakery-starter",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "check-node": "node ./scripts/check-node.js",
+    "clean": "node -e \"const fs=require('fs'); fs.rmSync('.next',{recursive:true,force:true}); fs.rmSync('tsconfig.tsbuildinfo',{force:true});\"",
+    "dev:clean": "npm run clean && npm run dev",
+    "predev": "npm run check-node",
+    "prebuild": "npm run check-node",
+    "prestart": "npm run check-node",
+    "prelint": "npm run check-node",
+    "dev": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next dev",
+    "build": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next build",
+    "start": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next start",
+    "lint": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next lint",
+    "audit:images": "node scripts/audit-images.js"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "dependencies": {
+    "@types/node": "^20.11.30",
+    "@types/react": "^18.2.67",
+    "@types/react-dom": "^18.2.22",
+    "lucide-react": "^0.468.0",
+    "next": "^14.2.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.5"
+  }
+}

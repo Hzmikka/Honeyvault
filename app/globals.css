@@ -3271,7 +3271,9 @@ button { cursor: pointer; }
 
 .brand-art-mobile { display: none; }
 
-@media (max-width: 680px) {
+/* The artwork overlay needs its composed card layout before the general mobile breakpoint.
+   On tablet/narrow desktop the desktop overlay wraps inside fixed coordinates and copy can collide. */
+@media (max-width: 1024px) {
   .brand-art-desktop { display: none; }
 
   .brand-art-mobile {
@@ -3433,6 +3435,20 @@ button { cursor: pointer; }
     width: 23.78%;
     height: 12.68%;
     font-size: 2cqw;
+  }
+}
+
+/* Tablet: same isolated artwork cards as mobile, but the two operational cards can sit side by side
+   once each card has enough width. This keeps every text block inside its own proportional canvas. */
+@media (min-width: 840px) and (max-width: 1024px) {
+  .brand-art-mobile {
+    width: min(100% - 1.2rem, 900px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .7rem;
+  }
+
+  .brand-art-mobile-poster {
+    grid-column: 1 / -1;
   }
 }
 

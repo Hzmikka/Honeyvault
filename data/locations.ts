@@ -23,6 +23,7 @@ export type BakeryLocation = {
   };
   hours: Record<WeekdayKey, DailyHours>;
   scheduleSummary: string;
+  scheduleSummaryEs: string;
 };
 
 const daily = (open: string, close: string): Record<WeekdayKey, DailyHours> => ({
@@ -46,11 +47,12 @@ export const honeyvaultLocations: BakeryLocation[] = [
     cityState: "Miami, FL",
     image: "/images/Ubication/Flagship.webp",
     mapImage: "/images/location/Honeyvault-Wynwood.webp",
-    orderUrl: "#textures",
+    orderUrl: "#large-order-inquiry",
     directionsUrl: "https://www.google.com/maps/search/?api=1&query=255+NW+24th+St+Miami+FL",
     fulfillment: { pickup: true, localDelivery: true },
     hours: daily("07:00", "18:00"),
     scheduleSummary: "Daily · 7 AM–6 PM",
+    scheduleSummaryEs: "Todos los días · 7 a.m.–6 p.m.",
   },
   {
     id: "coral-gables",
@@ -62,7 +64,7 @@ export const honeyvaultLocations: BakeryLocation[] = [
     cityState: "Coral Gables, FL",
     image: "/images/Ubication/Neighborhood-stop.webp",
     mapImage: "/images/location/Honeyvault-Coral-Gables.webp",
-    orderUrl: "#textures",
+    orderUrl: "#large-order-inquiry",
     directionsUrl: "https://www.google.com/maps/search/?api=1&query=151+Miracle+Mile+Coral+Gables+FL",
     fulfillment: { pickup: true, localDelivery: true },
     hours: {
@@ -75,6 +77,7 @@ export const honeyvaultLocations: BakeryLocation[] = [
       sat: { open: "07:30", close: "17:30" },
     },
     scheduleSummary: "Mon–Sat · 7:30 AM–5:30 PM",
+    scheduleSummaryEs: "Lun–sáb · 7:30 a.m.–5:30 p.m. · Domingo cerrado",
   },
   {
     id: "south-beach",
@@ -86,10 +89,11 @@ export const honeyvaultLocations: BakeryLocation[] = [
     cityState: "Miami Beach, FL",
     image: "/images/Ubication/Beach-stop.webp",
     mapImage: "/images/location/Honeyvault-South-Beach.webp",
-    orderUrl: "#textures",
+    orderUrl: "#large-order-inquiry",
     directionsUrl: "https://www.google.com/maps/search/?api=1&query=845+Collins+Ave+Miami+Beach+FL",
     fulfillment: { pickup: true, localDelivery: false },
     hours: daily("08:00", "19:00"),
     scheduleSummary: "Daily · 8 AM–7 PM",
+    scheduleSummaryEs: "Todos los días · 8 a.m.–7 p.m.",
   },
 ];

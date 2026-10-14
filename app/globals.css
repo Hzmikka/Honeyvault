@@ -728,6 +728,9 @@ button { cursor: pointer; }
   scrollbar-color: color-mix(in srgb, var(--maroon) 38%, transparent) transparent;
 }
 .large-order-card {
+  border: 0;
+  padding: 0;
+  text-align: left;
   position: relative;
   min-height: 245px;
   border-radius: var(--radius-lg);
@@ -795,6 +798,13 @@ button { cursor: pointer; }
 .large-order-card span {
   z-index: 1;
 }
+.large-order-card[aria-pressed="true"] span { opacity: 1; transform: none; }
+.large-order-card:focus span { opacity: 1; transform: none; }
+.large-order-card[aria-pressed="true"] { outline: 2px solid var(--maroon); outline-offset: 2px; }
+.skip-link { position: absolute; left: 1rem; top: 1rem; z-index: 100; padding: .75rem 1rem; background: var(--maroon); color: var(--cherry-blossom); transform: translateY(-300%); }
+.skip-link:focus { position: fixed; transform: none; }
+.booking-field-error { color: var(--cherry-blossom); font-size: .75rem; line-height: 1.4; }
+.booking-field input[type="checkbox"] { width: auto; min-height: 0; margin: 0 .25rem 0 0; }
 .large-orders-cta {
   position: relative;
   display: grid;

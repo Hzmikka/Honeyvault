@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { commerceLinks } from "@/data/content";
 import { useLanguage } from "@/components/LanguageProvider";
+import { useOrder } from "@/components/OrderProvider";
 
 const rotatingItems = {
   en: ["fresh pastries", "a brunch box", "a sweet gift", "large-order desserts"],
@@ -17,6 +18,7 @@ const rotatingItems = {
 } as const;
 
 export function BakeryFinderSection() {
+  const { updateOrder } = useOrder();
   const { language } = useLanguage();
   const es = language === "es";
   const items = useMemo(() => rotatingItems[language], [language]);
@@ -59,7 +61,7 @@ export function BakeryFinderSection() {
         </div>
 
         <div className="bakery-finder-content">
-          <h2 className="bakery-finder-title" id="bakery-finder-title">
+          <h1 className="bakery-finder-title" id="bakery-finder-title">
             <span>{es ? "Encuentra" : "Find"}</span>
             <span className="rotating-word-frame" aria-live="off">
               <span className="rotating-word" key={`${language}-${items[itemIndex]}`}>
@@ -67,7 +69,7 @@ export function BakeryFinderSection() {
               </span>
             </span>
             <span>{es ? "en Miami" : "in Miami"}</span>
-          </h2>
+          </h1>
 
           <div className="bakery-finder-actions" aria-label={es ? "Comprar en Honeyvault" : "Order Honeyvault pastries"}>
             <a className="bakery-order-button" href={commerceLinks.orderNow}>
@@ -80,7 +82,7 @@ export function BakeryFinderSection() {
               <ArrowUpRight className="bakery-action-arrow" size={17} strokeWidth={2} aria-hidden="true" />
             </a>
 
-            <a className="bakery-plan-button" href={commerceLinks.planBox}>
+            <a className="bakery-plan-button" href={commerceLinks.planBox} onClick={() => updateOrder({ intent: "box", occasion: "Brunch" })}>
               <span className="bakery-action-label">
                 <span className="bakery-action-icon" aria-hidden="true">
                   <PackageOpen size={15} strokeWidth={2} />

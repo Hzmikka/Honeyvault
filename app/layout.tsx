@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Oswald } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageProvider";
+import { OrderProvider } from "@/components/OrderProvider";
 
 const editorialFont = Oswald({
   subsets: ["latin"],
@@ -25,7 +26,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={editorialFont.variable}>
         <LanguageProvider>
-          <div className="page-frame">{children}</div>
+          <OrderProvider>
+            <div className="page-frame">{children}</div>
+          </OrderProvider>
         </LanguageProvider>
       </body>
     </html>

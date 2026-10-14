@@ -1,5 +1,5 @@
 export const contactLinks = {
-  email: "mailto:hello@honeyvaultbakery.example",
+  email: null as string | null,
   whatsapp: null as string | null,
   instagram: null as string | null,
   tiktok: null as string | null,

@@ -2,21 +2,13 @@
 
 import Image from "next/image";
 import { useLanguage } from "@/components/LanguageProvider";
+import { useOrder } from "@/components/OrderProvider";
+import { orderItems } from "@/data/orderItems";
 
-const orderItems = [
-  { name: "Glazed Croissant Cubes", nameEs: "Cubos de croissant glaseados", image: "/images/order_section_images/01_glazed_croissant_cubes.webp" },
-  { name: "Strawberry Cream Tartlets", nameEs: "Tartaletas de fresa y crema", image: "/images/order_section_images/02_strawberry_cream_tartlets.webp" },
-  { name: "Raspberry Cream Cupcakes", nameEs: "Cupcakes de frambuesa y crema", image: "/images/order_section_images/03_raspberry_cream_cupcakes.webp" },
-  { name: "Black Forest Mini Cakes", nameEs: "Mini cakes Selva Negra", image: "/images/order_section_images/04_black_forest_mini_cakes.webp" },
-  { name: "Citrus Cream Cups", nameEs: "Copas de crema cítrica", image: "/images/order_section_images/05_citrus_cream_cups.webp" },
-  { name: "Strawberry Danish Rounds", nameEs: "Danesas redondas de fresa", image: "/images/order_section_images/06_strawberry_danish_rounds.webp" },
-  { name: "Cherry Blossom Mini Cakes", nameEs: "Mini cakes flor de cerezo", image: "/images/order_section_images/07_cherry_blossom_mini_cakes.webp" },
-  { name: "Pastel Cake Pops", nameEs: "Cake pops pastel", image: "/images/order_section_images/08_pastel_cake_pops.webp" },
-  { name: "Chocolate Covered Strawberries", nameEs: "Fresas cubiertas de chocolate", image: "/images/order_section_images/09_chocolate_covered_strawberries.webp" },
-];
 
 export function LargeOrdersSection() {
   const { language } = useLanguage();
+  const { draft, toggleSpecialItem } = useOrder();
   const es = language === "es";
 
   return (
@@ -39,10 +31,10 @@ export function LargeOrdersSection() {
           {orderItems.map((item) => {
             const name = es ? item.nameEs : item.name;
             return (
-              <article className="large-order-card" tabIndex={0} key={item.name}>
+              <button id={`order-item-${item.id}`} className="large-order-card" type="button" key={item.id} aria-label={name} aria-pressed={draft.specialItemIds.includes(item.id)} onClick={() => toggleSpecialItem(item.id)}>
                 <Image src={item.image} alt={name} fill sizes="(max-width: 768px) 72vw, 260px" />
-                <span>{name}</span>
-              </article>
+                <span>{draft.specialItemIds.includes(item.id) ? (es ? "Seleccionado · " : "Selected · ") : ""}{name}</span>
+              </button>
             );
           })}
         </div>

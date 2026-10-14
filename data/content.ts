@@ -1,6 +1,6 @@
 export const commerceLinks = {
   browsePastries: "#textures",
-  orderNow: "#locations",
+  orderNow: "#textures",
   getPastry: "#locations",
   planBox: "#large-orders",
   locations: "#locations",

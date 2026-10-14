@@ -45,7 +45,7 @@ export function Footer() {
           <nav className="footer-column" aria-label={es ? "Contacto" : "Contact"}>
             <h3>{es ? "Contacto" : "Contact"}</h3>
             <a href="#large-order-inquiry">{es ? "Solicitud de pedido grande" : "Large-order request"}</a>
-            <a href={contactLinks.email}>{es ? "Enviar email" : "Email us"}</a>
+            {contactLinks.email ? <a href={contactLinks.email}>{es ? "Enviar email" : "Email us"}</a> : null}
             {contactLinks.whatsapp ? <a href={contactLinks.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a> : null}
           </nav>
         </div>

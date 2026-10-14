@@ -51,6 +51,11 @@ Without `LEAD_WEBHOOK_URL`, the inquiry form stays in explicit portfolio-demo mo
 - Demo location order buttons stay inside the portfolio instead of opening placeholder `example.com` links.
 - All internal anchors were checked for matching section IDs.
 - Reduced-motion behavior is respected.
+- Product, occasion and shop choices follow the visitor into the inquiry form and persist for the tab session without storing contact information.
+- Shop order buttons lead to the inquiry form; the special-order gallery supports selection with mouse, touch and keyboard.
+- Search resolves actual bilingual products and shops and reports queries with no matches.
+- The form distinguishes people from pieces, asks for pickup shop or delivery ZIP, accepts flexible dates and validates dates/contact on both client and server.
+- Successful requests include a reviewable summary. Webhook failures preserve form data and return a delivery error; demo submissions never confirm a purchase.
 - Mobile and desktop layouts have separate spacing caps so large monitors do not create unnecessary empty vertical space.
 
 ## Image optimization
@@ -82,3 +87,13 @@ for the current image report.
 ## Portfolio disclaimer
 
 Honeyvault Bakery is a fictional portfolio concept. Demo pricing, reviews, location details, allergen language and operational availability must be replaced with verified client information before any real commercial launch.
+
+## Friction audit and checks
+
+See [docs/friction-triage.md](docs/friction-triage.md) for the technical changes, visual decisions reserved for discussion, and business information still needed.
+
+```bash
+npm test
+npm run lint
+npm run build
+```

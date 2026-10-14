@@ -1,13 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowUpRight, ShoppingBag } from "lucide-react";
 import { signaturePastries } from "@/data/pastries";
 import { commerceLinks } from "@/data/content";
 import { useLanguage } from "@/components/LanguageProvider";
+import { useOrder } from "@/components/OrderProvider";
 
 export function BakeryTextureGallery() {
+  const { draft, updateOrder } = useOrder();
   const { language } = useLanguage();
   const es = language === "es";
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -15,9 +17,18 @@ export function BakeryTextureGallery() {
   const displayIndex = previewIndex ?? selectedIndex;
   const activePastry = signaturePastries[displayIndex];
 
+  useEffect(() => {
+    const index = signaturePastries.findIndex(item => item.id === draft.pastryId);
+    if (index >= 0) {
+      setSelectedIndex(index);
+      setPreviewIndex(null);
+    }
+  }, [draft.pastryId]);
+
   const selectPastry = (index: number) => {
     setSelectedIndex(index);
     setPreviewIndex(null);
+    updateOrder({ pastryId: signaturePastries[index].id, intent: draft.intent ?? "pastry", occasion: draft.occasion || "Other" });
   };
 
   return (
@@ -28,7 +39,7 @@ export function BakeryTextureGallery() {
             <p>Honeyvault Bakery</p>
             <h2 id="texture-gallery-title">{es ? "Texturas distintivas" : "Signature textures"}</h2>
           </div>
-          <span>{es ? "Pasa el cursor y prueba con los ojos." : "Hover to taste with your eyes."}</span>
+          <span>{es ? "Selecciona un pastel y prueba con los ojos." : "Select a pastry and taste with your eyes."}</span>
         </div>
 
         <div
@@ -43,6 +54,7 @@ export function BakeryTextureGallery() {
 
             return (
               <button
+                id={`pastry-${pastry.id}`}
                 className={`texture-card${isDisplayed ? " active" : ""}`}
                 type="button"
                 aria-label={`${name}, ${pastry.price}`}
@@ -64,7 +76,7 @@ export function BakeryTextureGallery() {
           <div className="texture-info-bubble">
             <div className="texture-info-copy">
               <div className="texture-info-title-row">
-                <h3>{es ? activePastry.nameEs : activePastry.name}</h3>
+                <h3 id="texture-info-title" aria-live="polite">{es ? activePastry.nameEs : activePastry.name}</h3>
                 <strong>{activePastry.price}</strong>
               </div>
               <p>{es ? activePastry.detailEs : activePastry.detail}</p>
@@ -72,7 +84,7 @@ export function BakeryTextureGallery() {
               <span className="texture-allergens">{es ? activePastry.allergensEs : activePastry.allergens}</span>
             </div>
 
-            <a className="texture-info-button" href={activePastry.orderHref ?? commerceLinks.getPastry}>
+            <a className="texture-info-button" href={activePastry.orderHref ?? (draft.locationId ? commerceLinks.inquiry : commerceLinks.getPastry)} onClick={() => selectPastry(displayIndex)}>
               <ShoppingBag size={15} strokeWidth={2} aria-hidden="true" />
               <span>{es ? "Conseguir este pastel" : "Get this pastry"}</span>
               <ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" />

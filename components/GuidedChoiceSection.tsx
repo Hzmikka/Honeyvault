@@ -4,10 +4,15 @@ import Image from "next/image";
 import { ArrowRight, Boxes, CakeSlice, Croissant, PackageOpen } from "lucide-react";
 import { guidedChoices } from "@/data/content";
 import { useLanguage } from "@/components/LanguageProvider";
+import { useOrder } from "@/components/OrderProvider";
+import { OrderIntent } from "@/lib/orderDraft";
 
 const choiceIcons = [Croissant, PackageOpen, CakeSlice, Boxes] as const;
 
 export function GuidedChoiceSection() {
+  const { updateOrder } = useOrder();
+  const intents: OrderIntent[] = ["pastry", "box", "celebration", "large-order"];
+  const occasions = ["Other", "Brunch", "Birthday / celebration", "Office / team"];
   const { language } = useLanguage();
   const es = language === "es";
 
@@ -29,7 +34,7 @@ export function GuidedChoiceSection() {
             {guidedChoices.map((choice, index) => {
               const ChoiceIcon = choiceIcons[index];
               return (
-                <a className="guided-choice-item" href={choice.href} key={choice.number}>
+                <a className="guided-choice-item" href={choice.href} key={choice.number} onClick={() => updateOrder({ intent: intents[index], occasion: occasions[index] })}>
                   <span className="guided-choice-media" aria-hidden="true">
                     <Image
                       src={choice.image}

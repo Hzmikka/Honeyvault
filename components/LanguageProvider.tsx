@@ -15,10 +15,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>("en");
 
   useEffect(() => {
-    const stored = window.localStorage.getItem("honeyvault-language");
-    if (stored === "en" || stored === "es") {
-      setLanguageState(stored);
-    }
+    try {
+      const stored = window.localStorage.getItem("honeyvault-language");
+      if (stored === "en" || stored === "es") setLanguageState(stored);
+    } catch { /* Language selection also works without browser storage. */ }
   }, []);
 
   useEffect(() => {
@@ -28,7 +28,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   const setLanguage = (next: Language) => {
     setLanguageState(next);
-    window.localStorage.setItem("honeyvault-language", next);
+    try { window.localStorage.setItem("honeyvault-language", next); }
+    catch { /* Keep the in-memory choice when storage is disabled. */ }
   };
 
   const value = useMemo(() => ({ language, setLanguage }), [language]);

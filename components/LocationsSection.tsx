@@ -6,8 +6,11 @@ import { useEffect, useState } from "react";
 import { honeyvaultLocations } from "@/data/locations";
 import { getLocationOpenStatus } from "@/lib/locationStatus";
 import { useLanguage } from "@/components/LanguageProvider";
+import { useOrder } from "@/components/OrderProvider";
+import { commerceLinks } from "@/data/content";
 
 export function LocationsSection() {
+  const { draft, updateOrder } = useOrder();
   const { language } = useLanguage();
   const es = language === "es";
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -21,6 +24,11 @@ export function LocationsSection() {
   }, []);
 
   const selectedLocation = honeyvaultLocations[selectedIndex];
+
+  useEffect(() => {
+    const index = honeyvaultLocations.findIndex(shop => shop.id === draft.locationId);
+    if (index >= 0) setSelectedIndex(index);
+  }, [draft.locationId]);
 
   return (
     <section className="locations-section section" id="locations" aria-labelledby="locations-title">
@@ -38,7 +46,7 @@ export function LocationsSection() {
             const isActive = selectedIndex === index;
             const status = getLocationOpenStatus(location, now, language);
             return (
-              <article className={`location-quick-card${isActive ? " active" : ""}`} key={location.id}>
+              <article id={`location-${location.id}`} className={`location-quick-card${isActive ? " active" : ""}`} key={location.id}>
                 <div className="location-quick-media">
                   <Image
                     src={location.image}
@@ -72,7 +80,12 @@ export function LocationsSection() {
                   </div>
 
                   <div className="location-primary-actions">
-                    <a className="location-order-button" href={location.orderUrl}>
+                    <a className="location-order-button" href={commerceLinks.inquiry} onClick={() => updateOrder({
+                      locationId: location.id,
+                      fulfillment: draft.fulfillment === "Local delivery" && location.fulfillment.localDelivery ? "Local delivery" : "Pickup",
+                      intent: draft.intent ?? "pastry",
+                      occasion: draft.occasion || "Other",
+                    })}>
                       <span>{es ? `Pedir en ${location.shortName}` : `Order from ${location.shortName}`}</span>
                       <ArrowUpRight size={15} strokeWidth={2} aria-hidden="true" />
                     </a>
@@ -82,10 +95,16 @@ export function LocationsSection() {
                     </a>
                   </div>
 
-                  <button className="location-map-trigger" type="button" aria-pressed={isActive} onClick={() => setSelectedIndex(index)}>
+                  <button className="location-map-trigger" type="button" aria-pressed={isActive} onClick={() => {
+                    setSelectedIndex(index);
+                    updateOrder({ locationId: location.id, fulfillment: draft.fulfillment === "Local delivery" && !location.fulfillment.localDelivery ? "Pickup" : draft.fulfillment });
+                  }}>
                     <MapPin size={13} strokeWidth={2} aria-hidden="true" />
                     {isActive ? (es ? "Mostrado en mapa" : "Shown on map") : (es ? "Ver en mapa" : "Show on map")}
                   </button>
+                  <p className="location-address">
+                    {es ? location.scheduleSummaryEs : location.scheduleSummary}
+                  </p>
                 </div>
               </article>
             );

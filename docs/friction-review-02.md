@@ -36,4 +36,6 @@ Son fricciones posibles a partir de la estructura y la interfaz; no hay datos de
 
 La comprobación de producción se centra en la navegación única, fotos y etiquetas, buscador, conservación de fecha, consulta del mapa y los tres resúmenes simulados. La revisión visual se hace en escritorio; las reglas adaptativas se revisan en CSS, sin afirmar una prueba en dispositivos móviles reales.
 
+Comprobado en la web pública: búsqueda «crema» con cinco resultados y sin elección automática al pulsar Enter; día elegido mediante el control nativo conservado entre tiendas, hora válida conservada y hora incompatible vaciada; consulta de mapa/zona independiente del pedido; error de ZIP eliminado al corregirlo; resúmenes de 3 pistachos ($22.50), 2 cajas pequeñas ($84) y evento de 24 personas con montaje y entrega ($299). Las fotos muestran los nombres debajo. La revisión detectó además que el scroll snap inicial dejaba 4 px de desplazamiento; los límites de las flechas se calculan ahora por la posición de las tarjetas, incluyendo ese margen.
+
 No se añaden pagos, contactos, stock real ni integraciones comerciales: el objetivo sigue siendo que el visitante complete y entienda una simulación breve.

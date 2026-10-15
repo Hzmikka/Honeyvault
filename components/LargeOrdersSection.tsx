@@ -18,13 +18,13 @@ export function LargeOrdersSection() {
     if (!gallery) return;
     const viewport = gallery.getBoundingClientRect();
     const cards = Array.from(gallery.querySelectorAll<HTMLElement>(".large-order-card"));
-    const visible = cards.map((card, index) => ({ rect: card.getBoundingClientRect(), index }))
-      .filter(({ rect }) => rect.right > viewport.left + 2 && rect.left < viewport.right - 2);
+    const bounds = cards.map((card, index) => ({ rect: card.getBoundingClientRect(), index }));
+    const visible = bounds.filter(({ rect }) => rect.right > viewport.left + 2 && rect.left < viewport.right - 2);
     setPosition({
       first: (visible[0]?.index ?? 0) + 1,
       last: (visible[visible.length - 1]?.index ?? 0) + 1,
-      atStart: gallery.scrollLeft <= 2,
-      atEnd: gallery.scrollLeft + gallery.clientWidth >= gallery.scrollWidth - 2,
+      atStart: !bounds.length || bounds[0].rect.left >= viewport.left - 2,
+      atEnd: !bounds.length || bounds[bounds.length - 1].rect.right <= viewport.right + 2,
     });
   }, []);
   useEffect(() => {

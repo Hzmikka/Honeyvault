@@ -70,6 +70,13 @@ export function earliestSlot(journey: Journey, locationId: string, now = new Dat
   }
   return { date: "", time: "" };
 }
+// Keep the visitor's chosen date when browsing shops or changing fulfillment.
+// An incompatible time is cleared; only an empty/stale date gets a new default.
+export function reconcileSchedule(journey: Journey, locationId: string, selected: { date: string; time: string }, now = new Date()) {
+  if (!validDate(selected.date) || selected.date < miamiParts(now).date) return earliestSlot(journey, locationId, now);
+  const slots = availableSlots(journey, locationId, selected.date, now);
+  return { date: selected.date, time: slots.includes(selected.time) ? selected.time : "" };
+}
 export function demoStock(pastryId: string, locationId: string, date: string, now = new Date()) {
   if (date !== miamiParts(now).date) return true;
   return !(pastryId === "pistachio-croissant" && locationId === "wynwood") && !(pastryId === "vanilla-glazed-roll" && locationId === "south-beach");

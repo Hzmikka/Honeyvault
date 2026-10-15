@@ -1,6 +1,8 @@
-# Honeyvault: cierre de fricciones para la demo
+# Honeyvault: primera revisión de fricciones
 
 Actualizado el 15 de octubre de 2026. Implementación autorizada de los cambios técnicos y visuales. Los números conservan la auditoría original de 42 hallazgos.
+
+Este documento recoge la primera implementación; no implica que la web esté libre de fricciones. La [segunda revisión](friction-review-02.md) añade correcciones de navegación, galería y estado del pedido, y separa las decisiones visuales pendientes.
 
 La demo tiene tres recorridos completos: piezas diarias, cajas de surtido fijo y eventos. Las reglas de precios, preparación, horarios, stock y entrega son ficticias, consistentes y visibles. No se procesa ninguna compra ni se envían solicitudes.
 
@@ -25,7 +27,7 @@ La demo tiene tres recorridos completos: piezas diarias, cajas de surtido fijo y
 | 27, 28 | Errores con recuperación y foco; resumen de productos, cantidades, tienda, fecha/hora, modalidad y desglose. Se indica que no se ha comprado, reservado ni enviado nada. |
 | 29 | El configurador se ejecuta localmente, sin POST ni datos de contacto. Solo elecciones no personales se conservan en sessionStorage. La API anterior permanece compatible pero nunca invoca un webhook, incluso si existe LEAD_WEBHOOK_URL. |
 | 30 | Lista visible de múltiples resultados reales en EN/ES, acentos, cajas y tiendas; sin coincidencias se ofrecen ejemplos y enlaces al catálogo. Escape cierra la lista. |
-| 31 | Rutas de pasteles, cajas y eventos accesibles antes de la imagen principal; se conserva el hero sensorial. |
+| 31 | Rutas de pasteles, cajas y eventos accesibles desde el encabezado; se conserva el hero sensorial. La segunda revisión elimina la fila duplicada. |
 | 32 | El bloque editorial queda después del configurador. |
 | 33 | Rotación más lenta, pausa manual y al interactuar, con respeto de reduced motion. |
 | 34, 35 | Texto y controles mayores, formularios en una columna en móvil y menú compacto que reemplaza la navegación oculta. |

@@ -8,7 +8,7 @@ import { signaturePastries } from "@/data/pastries";
 import { honeyvaultLocations } from "@/data/locations";
 import { orderItems } from "@/data/orderItems";
 import { demoBoxes, deliveryZones, eventTerms } from "@/data/demoCommerce";
-import { availableSlots, DemoOrder, DemoQuote, earliestSlot, Journey, miamiParts, money, OrderError, quoteDemoOrder, validateDemoOrder } from "@/lib/demoCommerce";
+import { availableSlots, DemoOrder, DemoQuote, earliestSlot, Journey, miamiParts, money, OrderError, quoteDemoOrder, reconcileSchedule, validateDemoOrder } from "@/lib/demoCommerce";
 
 export function LargeOrderInquiry() {
   const { language } = useLanguage();
@@ -19,8 +19,8 @@ export function LargeOrderInquiry() {
   const [boxQuantity, setBoxQuantity] = useState(1);
   const [guests, setGuests] = useState(24);
   const [zip, setZip] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+  const [schedule, setSchedule] = useState({ date: "", time: "", automatic: true });
+  const { date, time } = schedule;
   const [flexibleDate, setFlexibleDate] = useState(false);
   const [styling, setStyling] = useState(false);
   const [eventName, setEventName] = useState("");
@@ -35,8 +35,10 @@ export function LargeOrderInquiry() {
 
   useEffect(() => { const timer = window.setInterval(() => setNow(new Date()), 60000); return () => window.clearInterval(timer); }, []);
   useEffect(() => {
-    const first = earliestSlot(journey, effectiveShop);
-    setDate(first.date); setTime(first.time); setErrors({}); setSubmitted(null);
+    setSchedule(current => current.automatic
+      ? { ...earliestSlot(journey, effectiveShop), automatic: true }
+      : { ...reconcileSchedule(journey, effectiveShop, current), automatic: false });
+    setErrors({}); setSubmitted(null);
   }, [journey, effectiveShop]);
   useEffect(() => { setSubmitted(null); setErrors({}); }, [draft.pastryId, draft.boxId, draft.specialItemIds, fulfillment]);
   useEffect(() => { if (fulfillment === "Pickup") setStyling(false); }, [fulfillment]);
@@ -51,6 +53,7 @@ export function LargeOrderInquiry() {
   const quote = quoteDemoOrder(input);
   const slots = availableSlots(journey, effectiveShop, date, now);
   const currentChecks = validateDemoOrder(input, now);
+  const visibleErrors = (Object.keys(errors) as OrderError[]).filter(key => currentChecks.errors[key]);
   const shop = honeyvaultLocations.find(item => item.id === effectiveShop)!;
   const box = demoBoxes.find(item => item.id === draft.boxId) || demoBoxes[0];
   const texts: Record<OrderError, string> = {
@@ -75,17 +78,20 @@ export function LargeOrderInquiry() {
   function useSample() {
     updateOrder({ intent: "large-order", specialItemIds: ["strawberry-tartlets", "citrus-cream-cups", "pastel-cake-pops"], locationId: "wynwood", fulfillment: "Local delivery" });
     setGuests(24); setZip("33127"); setStyling(true); setFlexibleDate(false);
-    const first = earliestSlot("event", "wynwood"); setDate(first.date); setTime(first.time);
+    setSchedule({ ...earliestSlot("event", "wynwood"), automatic: false });
     setEventName(es ? "Brunch del equipo · ejemplo" : "Team brunch · sample"); setErrors({});
   }
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const checked = validateDemoOrder(input, new Date());
+    const checkedAt = new Date();
+    const checked = validateDemoOrder(input, checkedAt);
+    setNow(checkedAt);
     setErrors(checked.errors);
     if (!checked.valid) { window.requestAnimationFrame(() => errorRef.current?.focus()); return; }
     setSubmitted({ input: { ...input, specialItemIds: [...input.specialItemIds] }, quote: checked.quote, eventName });
   }
   function priceRows(value: DemoQuote, order: DemoOrder = input) {
+    if (!value.lines.length) return <p className="demo-hint">{es ? "Completa tu selección y cantidad para ver el presupuesto. El total aparecerá aquí." : "Complete your selection and quantity to see the estimate. Your total will appear here."}</p>;
     const deliveryKnown = order.fulfillment === "Pickup" || deliveryZones.some(zone => zone.zip === order.zip && zone.delivery);
     return <>
       {value.lines.map(line => <div className="quote-line" key={line.id}><span>{line.count} × {es ? line.nameEs : line.name}</span><strong>{money(line.cents)}</strong></div>)}
@@ -138,12 +144,12 @@ export function LargeOrderInquiry() {
           <fieldset className="demo-fulfillment"><legend>{es ? "Modalidad" : "Fulfillment"}</legend>{(["Pickup", "Local delivery"] as const).map(value => <label key={value}><input type="radio" name="fulfillment" value={value} checked={fulfillment === value} onChange={() => updateOrder({ fulfillment: value })} />{value === "Pickup" ? (es ? "Recogida" : "Pickup") : (es ? "Entrega local" : "Local delivery")}</label>)}</fieldset>
           {fulfillment === "Pickup" ? <label>{es ? "Tienda de recogida" : "Pickup shop"}<select value={input.locationId} onChange={event => updateOrder({ locationId: event.target.value })}>{honeyvaultLocations.map(item => <option key={item.id} value={item.id}>{item.shortName} · {es ? item.scheduleSummaryEs : item.scheduleSummary}</option>)}</select></label> : <div className="demo-delivery"><label>{es ? "ZIP de entrega · cobertura de muestra" : "Delivery ZIP · sample coverage"}<input inputMode="numeric" maxLength={5} pattern="[0-9]{5}" value={zip} onChange={event => setZip(event.target.value.replace(/\D/g, ""))} placeholder="33127" /></label><div className="demo-zip-examples">{deliveryZones.map(zone => <button type="button" key={zone.zip} onClick={() => setZip(zone.zip)}>{zone.zip}{zone.delivery ? ` · ${money(zone.feeCents)}` : ` · ${es ? "recogida" : "pickup"}`}</button>)}</div><p className="demo-hint" role="status">{selectedZone?.delivery ? `${shop.shortName} · ${money(selectedZone.feeCents)} ${es ? "de entrega · mínimo de productos" : "delivery · product minimum"} ${money(selectedZone.minimumCents)}` : selectedZone ? texts["pickup-only"] : zip.length === 5 ? texts.coverage : (es ? "Usa uno de los ZIP de ejemplo para probar la cobertura." : "Use a sample ZIP to try the coverage.")}</p>{selectedZone && !selectedZone.delivery && <button type="button" className="demo-inline-button" onClick={() => updateOrder({ fulfillment: "Pickup", locationId: "south-beach" })}>{es ? "Recoger en South Beach" : "Pick up at South Beach"}</button>}</div>}
           {journey === "event" && <label className="demo-check"><input type="checkbox" checked={flexibleDate} onChange={event => setFlexibleDate(event.target.checked)} />{es ? "Todavía no tengo fecha" : "My date is still flexible"}</label>}
-          {!input.flexibleDate && <div className="demo-field-grid"><label>{es ? "Fecha · Miami" : "Date · Miami"}<input type="date" min={miamiParts(now).date} value={date} onChange={event => { setDate(event.target.value); setTime(availableSlots(journey, effectiveShop, event.target.value)[0] || ""); }} /></label><label>{es ? "Hora · Miami" : "Time · Miami"}<select value={time} onChange={event => setTime(event.target.value)}><option value="">{es ? "Elige una franja" : "Choose a time"}</option>{slots.map(slot => <option key={slot} value={slot}>{slot}</option>)}</select></label></div>}
+          {!input.flexibleDate && <div className="demo-field-grid"><label>{es ? "Fecha · Miami" : "Date · Miami"}<input type="date" min={miamiParts(now).date} value={date} onChange={event => { setSchedule({ date: event.target.value, time: "", automatic: false }); }} /></label><label>{es ? "Hora · Miami" : "Time · Miami"}<select value={time} onChange={event => setSchedule(current => ({ ...current, time: event.target.value, automatic: false }))}><option value="">{es ? "Elige una franja" : "Choose a time"}</option>{slots.map(slot => <option key={slot} value={slot}>{slot}</option>)}</select></label></div>}
           <p className="demo-hint">{journey === "pastry" ? (es ? "30 min de preparación. Stock de ejemplo por tienda y fecha." : "30 min preparation. Sample stock varies by shop and date.") : journey === "box" ? (es ? "Reserva de muestra con al menos 24 horas de anticipación." : "Sample preorder with at least 24 hours notice.") : (es ? "Al menos 48 horas de anticipación para una fecha concreta." : "At least 48 hours notice for a fixed date.")} {es ? "Solo mostramos franjas dentro del horario de la tienda." : "Times follow the shop's opening hours."}</p>
-          {!input.flexibleDate && !slots.length && <p className="demo-notice">{es ? "La tienda está cerrada o no queda tiempo de preparación ese día." : "The shop is closed or there is no preparation time left that day."} <button type="button" className="demo-inline-button" onClick={() => { const next = earliestSlot(journey, effectiveShop); setDate(next.date); setTime(next.time); }}>{es ? "Elegir próxima franja" : "Use next available time"}</button></p>}
+          {!input.flexibleDate && !slots.length && <p className="demo-notice">{es ? "La tienda está cerrada o no queda tiempo de preparación ese día." : "The shop is closed or there is no preparation time left that day."} <button type="button" className="demo-inline-button" onClick={() => { setSchedule({ ...earliestSlot(journey, effectiveShop), automatic: false }); }}>{es ? "Elegir próxima franja" : "Use next available time"}</button></p>}
           {currentChecks.errors.stock && <p className="demo-notice">{texts.stock} <button className="demo-inline-button" type="button" onClick={() => { updateOrder({ locationId: "coral-gables", fulfillment: "Pickup" }); }}>{es ? "Ver Coral Gables" : "Try Coral Gables"}</button></p>}
           {journey === "event" && <div className="demo-service"><h4>{es ? "Qué incluye" : "What's included"}</h4><p>{es ? "Mini postres seleccionados, reparto por sabor y cajas para transportar. Recogida sin cargo; entrega según ZIP." : "Selected minis, quantities per flavor and transport boxes. Pickup is free; delivery follows your ZIP."}</p><label className="demo-check"><input type="checkbox" checked={styling} disabled={fulfillment !== "Local delivery"} onChange={event => setStyling(event.target.checked)} />{es ? "Añadir presentación y montaje · $75" : "Add presentation & setup · $75"}</label><p className="demo-fineprint">{es ? "Con entrega local: bases de exhibición de muestra y 30 min de montaje. Mesa, decoración floral, servicio durante el evento y desmontaje no incluidos." : "With local delivery: sample display stands and 30 min setup. Table, flowers, event staffing and teardown are not included."}</p></div>}
-          {Object.keys(errors).length > 0 && <div className="demo-errors" ref={errorRef} tabIndex={-1} role="alert"><strong>{es ? "Revisa estos detalles" : "Check these details"}</strong><ul>{(Object.keys(errors) as OrderError[]).map(key => <li key={key}>{texts[key]}</li>)}</ul></div>}
+          {visibleErrors.length > 0 && <div className="demo-errors" ref={errorRef} tabIndex={-1} role="alert"><strong>{es ? "Revisa estos detalles" : "Check these details"}</strong><ul>{visibleErrors.map(key => <li key={key}>{texts[key]}</li>)}</ul></div>}
           <button className="demo-button demo-submit" type="submit"><ShoppingBag size={17} aria-hidden="true" />{journey === "event" ? (es ? "Simular solicitud de cotización" : "Simulate a quote request") : (es ? "Ver resumen simulado" : "See simulated summary")}<ArrowUpRight size={17} aria-hidden="true" /></button>
           <p className="demo-fineprint">{es ? "Todo se calcula en tu navegador. No se envían datos ni se procesan pagos." : "Everything is calculated in your browser. No details are sent and no payments are processed."}</p>
         </form>

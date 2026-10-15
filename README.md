@@ -46,6 +46,7 @@ The existing Vercel project is linked to `Hzmikka/Honeyvault`; GitHub `main` is 
 - `data/locations.ts`: sample shops, hours and fulfillment.
 - `data/demoCommerce.ts`: shared fictional commerce fixtures.
 - `docs/friction-triage.md`: disposition of all 42 friction findings.
+- `docs/friction-review-02.md`: second review, navigation/gallery corrections, order-state fixes and design decisions awaiting discussion.
 - `docs/generated-assets.md`: generated whole-product imagery and exact prompts.
 
 Allergen and size information, images, addresses, reviews, stock, fees and operational terms are illustrative. Replace them with verified business information before a commercial launch.

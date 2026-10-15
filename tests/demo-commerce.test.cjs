@@ -88,3 +88,19 @@ test("quantities, unknown items and setup fulfillment cannot bypass validation",
   assert.equal(validateDemoOrder({ ...event, fulfillment: "Pickup" }, now).errors.styling, true);
   assert.equal(validateDemoOrder({ ...event, guests: 2 }, now).errors.guests, true);
 });
+test("changing shops keeps an event date and a still-valid time", () => {
+  const { reconcileSchedule } = require("../lib/demoCommerce.ts");
+  const chosen = { date: "2026-10-20", time: "11:00" };
+  assert.deepEqual(reconcileSchedule("event", "coral-gables", chosen, now), chosen);
+  assert.deepEqual(reconcileSchedule("event", "wynwood", chosen, now), chosen);
+});
+test("closed shop or incompatible time keeps the day and asks for a new slot", () => {
+  const { reconcileSchedule } = require("../lib/demoCommerce.ts");
+  assert.deepEqual(reconcileSchedule("event", "coral-gables", { date: "2026-10-18", time: "11:00" }, now), { date: "2026-10-18", time: "" });
+  assert.deepEqual(reconcileSchedule("pastry", "coral-gables", { date: "2026-10-20", time: "18:30" }, now), { date: "2026-10-20", time: "" });
+  assert.deepEqual(reconcileSchedule("box", "wynwood", { date: "2026-10-15", time: "11:00" }, now), { date: "2026-10-15", time: "" });
+});
+test("empty or expired dates get an available initial schedule", () => {
+  const { reconcileSchedule } = require("../lib/demoCommerce.ts");
+  for (const date of ["", "2000-01-01", "2026-02-30"]) assert.deepEqual(reconcileSchedule("box", "wynwood", { date, time: "11:00" }, now), earliestSlot("box", "wynwood", now));
+});

@@ -8,10 +8,10 @@ export const commerceLinks = {
 };
 
 export const navLinks = [
-  { label: "SHOP", labelEs: "PASTELES", href: "#textures" },
-  { label: "BOXES", labelEs: "CAJAS", href: "#boxes" },
-  { label: "LOCATIONS", labelEs: "TIENDAS", href: "#locations" },
-  { label: "EVENTS", labelEs: "EVENTOS", href: "#large-orders" },
+  { label: "Pastries", labelEs: "Pasteles", href: "#textures" },
+  { label: "Boxes", labelEs: "Cajas", href: "#boxes" },
+  { label: "Shops", labelEs: "Tiendas", href: "#locations" },
+  { label: "Events", labelEs: "Eventos", href: "#large-orders" },
 ] as const;
 
 export const guidedChoices = [

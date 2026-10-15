@@ -15,7 +15,7 @@ export function BakeryTextureGallery() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   const displayIndex = previewIndex ?? selectedIndex;
-  const activePastry = signaturePastries[displayIndex];
+  const activePastry = signaturePastries[selectedIndex];
 
   useEffect(() => {
     const index = signaturePastries.findIndex(item => item.id === draft.pastryId);
@@ -39,7 +39,7 @@ export function BakeryTextureGallery() {
             <p>Honeyvault Bakery</p>
             <h2 id="texture-gallery-title">{es ? "Texturas distintivas" : "Signature textures"}</h2>
           </div>
-          <span>{es ? "5 piezas del día · 30 min de preparación · precios de muestra." : "5 daily pastries · 30 min preparation · sample prices."}</span>
+          <span>{es ? "Selecciona una pieza para ver sus detalles · preparación de 30 min." : "Select a pastry to see its details · 30 min preparation."}</span>
         </div>
 
         <div
@@ -87,7 +87,7 @@ export function BakeryTextureGallery() {
               <span className="texture-allergens">{es ? "Pieza individual · 12–15 cm aprox. · datos de muestra; consulta alérgenos reales antes de consumir." : "Single pastry · approx. 12–15 cm · sample details; verify real allergens before eating."}</span>
             </div>
 
-            <a className="texture-info-button" href={commerceLinks.inquiry} onClick={() => selectPastry(displayIndex)}>
+            <a className="texture-info-button" href={commerceLinks.inquiry} onClick={() => selectPastry(selectedIndex)}>
               <ShoppingBag size={15} strokeWidth={2} aria-hidden="true" />
               <span>{es ? "Elegir esta pieza" : "Choose this pastry"}</span>
               <ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" />

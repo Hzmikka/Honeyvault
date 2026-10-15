@@ -7,6 +7,7 @@ import { signaturePastries } from "@/data/pastries";
 import { commerceLinks } from "@/data/content";
 import { useLanguage } from "@/components/LanguageProvider";
 import { useOrder } from "@/components/OrderProvider";
+import { SectionLink } from "@/components/SectionLink";
 
 export function BakeryTextureGallery() {
   const { draft, updateOrder } = useOrder();
@@ -39,7 +40,7 @@ export function BakeryTextureGallery() {
             <p>Honeyvault Bakery</p>
             <h2 id="texture-gallery-title">{es ? "Texturas distintivas" : "Signature textures"}</h2>
           </div>
-          <span>{es ? "Selecciona una pieza para ver sus detalles · preparación de 30 min." : "Select a pastry to see its details · 30 min preparation."}</span>
+          <span>{es ? "Un sabor por pedido · 1–24 piezas · 30 min de preparación." : "One flavor per order · 1–24 pieces · 30 min preparation."}</span>
         </div>
 
         <div
@@ -84,14 +85,14 @@ export function BakeryTextureGallery() {
               <p>{es ? activePastry.detailEs : activePastry.detail}</p>
               <span className="texture-sensory">{es ? activePastry.sensoryEs : activePastry.sensory}</span>
               <span className="texture-allergens">{es ? activePastry.allergensEs : activePastry.allergens}</span>
-              <span className="texture-allergens">{es ? "Pieza individual · 12–15 cm aprox. · datos de muestra; consulta alérgenos reales antes de consumir." : "Single pastry · approx. 12–15 cm · sample details; verify real allergens before eating."}</span>
+              <span className="texture-allergens">{es ? "Pieza individual · 12–15 cm aprox." : "Single pastry · approx. 12–15 cm."}</span>
             </div>
 
-            <a className="texture-info-button" href={commerceLinks.inquiry} onClick={() => selectPastry(selectedIndex)}>
+            <SectionLink className="texture-info-button" href={commerceLinks.inquiry} onClick={() => selectPastry(selectedIndex)}>
               <ShoppingBag size={15} strokeWidth={2} aria-hidden="true" />
-              <span>{es ? "Elegir esta pieza" : "Choose this pastry"}</span>
+              <span>{es ? "Elegir este pastel" : "Choose this pastry"}</span>
               <ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" />
-            </a>
+            </SectionLink>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, MouseEvent, useRef, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Menu, Search } from "lucide-react";
 import { navLinks } from "@/data/content";
 import { honeyvaultLocations } from "@/data/locations";
@@ -17,6 +17,16 @@ export function Header() {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDetailsElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const updateHeight = () => document.documentElement.style.setProperty("--site-header-height", `${header.getBoundingClientRect().height}px`);
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(header);
+    updateHeight();
+    return () => observer.disconnect();
+  }, []);
   const matches = findSearchMatches(query);
   const resultsVisible = open && !!query.trim();
   function select(match: SearchMatch) {
@@ -36,7 +46,7 @@ export function Header() {
     navigateToSection(href.slice(1));
   }
   function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setOpen(true); if (matches.length === 1) select(matches[0]); }
-  return <header className="site-header">
+  return <header className="site-header" ref={headerRef}>
     <a className="skip-link" href="#main-content">{es ? "Saltar al contenido" : "Skip to content"}</a>
     <div className="demo-topline"><span>{es ? "Honeyvault es una demo · pedidos y precios de muestra" : "Honeyvault is a demo · sample orders & prices"}</span><a href="#studio">Celeste Web Studio <ArrowUpRight size={12} aria-hidden="true" /></a></div>
     <div className="container header-inner">

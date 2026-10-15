@@ -20,7 +20,7 @@
 
 ## Decisiones de diseño para discutir
 
-Son fricciones posibles a partir de la estructura y la interfaz; no hay datos de usuarios ni mediciones de conversión que permitan cuantificar su impacto. No se modifican en esta revisión.
+Son fricciones posibles a partir de la estructura y la interfaz; no hay datos de usuarios ni mediciones de conversión que permitan cuantificar su impacto. Se discutieron después de esta revisión y Cami autorizó los ajustes de cierre: véase [cierre de la demo](demo-release.md).
 
 | Prioridad | Observación | Propuesta para una demo |
 | --- | --- | --- |

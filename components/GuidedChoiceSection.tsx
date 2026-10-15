@@ -1,23 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowRight, Boxes, CakeSlice, Croissant, PackageOpen } from "lucide-react";
+import { ArrowRight, CakeSlice, Croissant, PackageOpen } from "lucide-react";
 import { guidedChoices } from "@/data/content";
 import { useLanguage } from "@/components/LanguageProvider";
 import { useOrder } from "@/components/OrderProvider";
 import { OrderIntent } from "@/lib/orderDraft";
+import { SectionLink } from "@/components/SectionLink";
 
-const choiceIcons = [Croissant, PackageOpen, CakeSlice, Boxes] as const;
+const choiceIcons = [Croissant, PackageOpen, CakeSlice] as const;
 
 export function GuidedChoiceSection() {
   const { updateOrder } = useOrder();
-  const intents: OrderIntent[] = ["pastry", "box", "celebration", "large-order"];
-  const occasions = ["Other", "Brunch", "Birthday / celebration", "Office / team"];
+  const intents: OrderIntent[] = ["pastry", "box", "large-order"];
+  const occasions = ["Other", "Brunch", "Other"];
   const { language } = useLanguage();
   const es = language === "es";
 
   return (
-    <section className="guided-choice-section" aria-labelledby="guided-choice-title">
+    <section className="guided-choice-section" id="guided-choice" aria-labelledby="guided-choice-title">
       <div className="container">
         <div className="guided-choice-shell">
           <header className="guided-choice-header">
@@ -25,22 +26,19 @@ export function GuidedChoiceSection() {
             <h2 className="guided-choice-heading" id="guided-choice-title">
               {es ? "¿Qué vienes a buscar?" : "What are you here for?"}
             </h2>
-            <p className="guided-choice-intro">
-              {es ? "Ve directo a lo que encaja contigo." : "Jump straight to what fits."}
-            </p>
           </header>
 
-          <nav className="guided-choice-grid" aria-label={es ? "Comprar por ocasión" : "Shop Honeyvault by occasion"}>
+          <nav className="guided-choice-grid" aria-label={es ? "Elige tu recorrido" : "Choose your journey"}>
             {guidedChoices.map((choice, index) => {
               const ChoiceIcon = choiceIcons[index];
               return (
-                <a className="guided-choice-item" href={choice.href} key={choice.number} onClick={() => updateOrder({ intent: intents[index], occasion: occasions[index] })}>
+                <SectionLink className="guided-choice-item" href={choice.href} key={choice.number} onClick={() => updateOrder({ intent: intents[index], occasion: occasions[index] })}>
                   <span className="guided-choice-media" aria-hidden="true">
                     <Image
                       src={choice.image}
                       alt=""
                       fill
-                      sizes="(max-width: 680px) calc(100vw - 2rem), (max-width: 1024px) 46vw, 520px"
+                      sizes="(max-width: 680px) calc(100vw - 2rem), 33vw"
                     />
                   </span>
                   <span className="guided-choice-scrim" aria-hidden="true" />
@@ -58,7 +56,7 @@ export function GuidedChoiceSection() {
                   </div>
 
                   <ArrowRight className="guided-choice-arrow" size={24} strokeWidth={1.8} aria-hidden="true" />
-                </a>
+                </SectionLink>
               );
             })}
           </nav>

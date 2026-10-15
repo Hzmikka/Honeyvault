@@ -5,6 +5,7 @@ import { commerceLinks } from "@/data/content";
 import { contactLinks } from "@/data/contact";
 import { footerExploreLinks } from "@/data/footer";
 import { useLanguage } from "@/components/LanguageProvider";
+import { SectionLink } from "@/components/SectionLink";
 
 export function Footer() {
   const { language } = useLanguage();
@@ -44,7 +45,7 @@ export function Footer() {
 
           <nav className="footer-column" aria-label={es ? "Contacto" : "Contact"}>
             <h3>{es ? "Contacto" : "Contact"}</h3>
-            <a href="#large-order-inquiry">{es ? "Probar un pedido" : "Try an order"}</a>
+            <SectionLink href="#large-order-inquiry">{es ? "Armar pedido" : "Build an order"}</SectionLink>
             {contactLinks.email ? <a href={contactLinks.email}>{es ? "Enviar email" : "Email us"}</a> : null}
             {contactLinks.whatsapp ? <a href={contactLinks.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a> : null}
           </nav>
@@ -57,8 +58,8 @@ export function Footer() {
         <div className="container footer-bottom-inner">
           <div>
             <span>© {year} Honeyvault Bakery</span><span aria-hidden="true">·</span>
-            <span>{es ? "Concepto de portafolio" : "Portfolio concept"}</span><span aria-hidden="true">·</span>
-            <span>{es ? "Solo demo — no se procesan pedidos reales." : "Demo only — no real orders are processed."}</span>
+            <span>{es ? "Concepto de portafolio" : "Portfolio concept"}</span>
+
           </div>
           <a href="#top">{es ? "Volver arriba" : "Back to top"}<ArrowUp size={13} aria-hidden="true" /></a>
         </div>

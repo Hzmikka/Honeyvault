@@ -4,13 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ArrowUpRight,
   Croissant,
-  PackageOpen,
   ShoppingBag,
   Sparkles,
 } from "lucide-react";
-import { commerceLinks } from "@/data/content";
 import { useLanguage } from "@/components/LanguageProvider";
-import { useOrder } from "@/components/OrderProvider";
+import { SectionLink } from "@/components/SectionLink";
 
 const rotatingItems = {
   en: ["fresh pastries", "a brunch box", "a sweet gift", "large-order desserts"],
@@ -18,7 +16,6 @@ const rotatingItems = {
 } as const;
 
 export function BakeryFinderSection() {
-  const { updateOrder } = useOrder();
   const { language } = useLanguage();
   const es = language === "es";
   const items = useMemo(() => rotatingItems[language], [language]);
@@ -75,25 +72,13 @@ export function BakeryFinderSection() {
           <button className="rotation-control" type="button" aria-pressed={paused} disabled={prefersReducedMotion} onClick={() => setPaused(current => !current)}>{prefersReducedMotion ? (es ? "Movimiento reducido" : "Reduced motion") : paused ? (es ? "Reanudar titular" : "Resume title") : (es ? "Pausar titular" : "Pause title")}</button>
 
           <div className="bakery-finder-actions" aria-label={es ? "Comprar en Honeyvault" : "Order Honeyvault pastries"}>
-            <a className="bakery-order-button" href={commerceLinks.orderNow}>
+            <SectionLink className="bakery-order-button" href="#guided-choice">
               <span className="bakery-action-label">
-                <span className="bakery-action-icon" aria-hidden="true">
-                  <ShoppingBag size={15} strokeWidth={2} />
-                </span>
-                <span>{es ? "Pedir ahora" : "Order now"}</span>
+                <span className="bakery-action-icon" aria-hidden="true"><ShoppingBag size={15} strokeWidth={2} /></span>
+                <span>{es ? "Elegir mi pedido" : "Choose my order"}</span>
               </span>
               <ArrowUpRight className="bakery-action-arrow" size={17} strokeWidth={2} aria-hidden="true" />
-            </a>
-
-            <a className="bakery-plan-button" href={commerceLinks.planBox} onClick={() => updateOrder({ intent: "box", occasion: "Brunch" })}>
-              <span className="bakery-action-label">
-                <span className="bakery-action-icon" aria-hidden="true">
-                  <PackageOpen size={15} strokeWidth={2} />
-                </span>
-                <span>{es ? "Planear una caja" : "Plan a box"}</span>
-              </span>
-              <ArrowUpRight className="bakery-action-arrow" size={17} strokeWidth={2} aria-hidden="true" />
-            </a>
+            </SectionLink>
           </div>
 
           <div className="bakery-finder-logistics">
@@ -102,11 +87,6 @@ export function BakeryFinderSection() {
               <span aria-hidden="true"> · </span>
               {es ? "Recogida y entrega local" : "Pickup & local delivery"}
             </span>
-
-            <a href={commerceLinks.locations}>
-              {es ? "Encontrar tienda" : "Find a shop"}
-              <ArrowUpRight size={13} strokeWidth={2} aria-hidden="true" />
-            </a>
           </div>
         </div>
       </div>

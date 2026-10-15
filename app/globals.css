@@ -4445,3 +4445,48 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .desktop-nav { display: none; }
   .compact-navigation { display: block; }
 }
+
+/* Final demo paths and a compact, shared price summary. */
+.bakery-finder-actions { grid-template-columns: 1fr; max-width: 250px; }
+.guided-choice-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.guided-choice-copy { max-width: 100%; }
+.guided-choice-copy p { font-size: .88rem; line-height: 1.45; }
+.large-orders-cta { align-items: center; }
+.large-orders-cta-intro { margin-bottom: 0; }
+.demo-mobile-quote-bar { display: none; }
+.demo-quote-details > p { font-size: .9rem; line-height: 1.6; }
+#guided-choice, #top, #main-content, #boxes, #demo-receipt, #studio, #textures, #locations, #large-orders, #large-order-inquiry, [id^="pastry-"], [id^="order-item-"], [id^="box-"] { scroll-margin-top: calc(var(--site-header-height, 140px) + 16px); }
+@media (max-width: 760px) {
+  html { scroll-padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
+  .demo-checkout { padding-bottom: calc(125px + env(safe-area-inset-bottom, 0px)); }
+  .demo-order-form :is(input, select, button, [tabindex]) { scroll-margin-block: calc(var(--site-header-height, 150px) + 12px) 125px; }
+  .demo-live-quote { display: none; }
+  .demo-live-quote--visible { display: flex; flex-direction: column; position: fixed; z-index: 40; inset: auto 0 0; width: 100%; max-height: calc(100svh - var(--site-header-height, 150px) - 16px); border-radius: 18px 18px 0 0; padding: .75rem max(1rem, env(safe-area-inset-right, 0px)) calc(.75rem + env(safe-area-inset-bottom, 0px)) max(1rem, env(safe-area-inset-left, 0px)); box-shadow: 0 -8px 28px rgb(46 27 27 / .18); }
+  .demo-mobile-quote-bar { display: flex; order: 2; align-items: center; justify-content: space-between; gap: .75rem; flex-shrink: 0; }
+  .demo-mobile-quote-copy { display: grid; gap: .2rem; min-width: 0; }
+  .demo-mobile-quote-copy span { font-size: .86rem; line-height: 1.35; }
+  .demo-mobile-quote-copy strong { font-size: 1.3rem; line-height: 1.2; font-weight: 500; }
+  .demo-quote-toggle { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; flex-shrink: 0; min-height: 44px; max-width: 48%; padding: .6rem .8rem; border: 1px solid var(--cherry-blossom); border-radius: 24px; background: transparent; color: inherit; font: inherit; font-size: .9rem; }
+  .demo-quote-details { display: none; order: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .demo-quote-details--open { display: block; padding: .35rem .25rem 1rem; margin-bottom: .75rem; border-bottom: 1px solid rgb(245 203 217 / .3); }
+  .demo-quote-details h3 { font-size: 1.5rem; }
+  .demo-quote-details .demo-quote-shop { margin-bottom: 0; }
+  .demo-zip-examples button { min-height: 44px; }
+}
+@media (max-width: 680px) {
+  .guided-choice-grid { grid-template-columns: 1fr; }
+  .guided-choice-copy p { font-size: .9rem; }
+  .header-inner { display: grid; grid-template-columns: 60px minmax(0, 1fr) auto; gap: .5rem; min-height: 0; padding-block: .6rem; }
+  .header-actions { display: contents; }
+  .logo { grid-column: 1; grid-row: 1; }
+  .language-toggle { grid-column: 2; grid-row: 1; justify-self: end; }
+  .language-toggle button { min-width: 44px; min-height: 44px; height: 44px; font-size: .8rem; }
+  .compact-navigation { grid-column: 3; grid-row: 1; justify-self: end; }
+  .compact-navigation summary { min-height: 44px; font-size: .85rem; }
+  .site-search { grid-column: 1 / 3; grid-row: 2; min-width: 0; }
+  .site-search .search-pill { width: 100%; min-height: 44px; }
+  .search-pill input { font-size: 1rem; }
+  .search-pill button { min-height: 44px; min-width: 44px; }
+  .signin-button { grid-column: 3; grid-row: 2; min-height: 44px; font-size: .85rem; padding-inline: .8rem; }
+  .search-results { left: 0; right: auto; width: min(320px, calc(100vw - 2rem)); }
+}

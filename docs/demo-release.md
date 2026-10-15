@@ -18,6 +18,8 @@
 - Revisión del CSS adaptable y de las condiciones de visibilidad/altura del presupuesto.
 - La comprobación pública verifica las tres entradas, los recorridos, EN/ES y el foco del teclado.
 
+Resultado de la comprobación pública: los tres recorridos se completaron con activación mediante Enter/Espacio y cambios de cantidad con flechas. Dos cajas pequeñas produjeron $84; 3 pistachos, $22.50; el evento de 24 personas con montaje y entrega, $299. Los importes y las selecciones se conservaron al cambiar EN/ES. Se verificó el foco en el destino, en el recibo y en el selector al editar; la tabulación del encabezado pasa de EN a ES y después a «Armar pedido». Los destinos quedaron unos 16 px por debajo del encabezado en escritorio.
+
 ## Límite de verificación
 
 El navegador disponible en esta sesión no ofrece emulación ni cambio de viewport. Por tanto, la revisión del CSS móvil no equivale a una prueba visual/táctil en teléfono. Esa comprobación queda pendiente y debe cubrir 320–390 px, apertura/cierre del desglose, teclado virtual, safe area y acceso al botón final sin quedar tapado. No se declara «cero fricciones» ni validación en dispositivos reales.

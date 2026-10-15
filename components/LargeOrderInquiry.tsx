@@ -117,7 +117,7 @@ export function LargeOrderInquiry() {
     setSubmitted({ input: { ...input, specialItemIds: [...input.specialItemIds] }, quote: checked.quote, eventName });
   }
   function priceRows(value: DemoQuote, order: DemoOrder = input) {
-    if (!value.lines.length) return <p className="demo-hint">{es ? "Completa tu selección y cantidad para ver el presupuesto. El total aparecerá aquí." : "Complete your selection and quantity to see the estimate. Your total will appear here."}</p>;
+    if (!value.lines.length) return <p className="demo-hint">{es ? "Elige productos y cantidades para calcular el total." : "Choose products and quantities to calculate the total."}</p>;
     const deliveryKnown = order.fulfillment === "Pickup" || deliveryZones.some(zone => zone.zip === order.zip && zone.delivery);
     return <>
       {value.lines.map(line => <div className="quote-line" key={line.id}><span>{line.count} × {es ? line.nameEs : line.name}</span><strong>{money(line.cents)}</strong></div>)}
@@ -187,7 +187,7 @@ export function LargeOrderInquiry() {
           </div>
           <div id="demo-quote-details" className={`demo-quote-details${quoteOpen ? " demo-quote-details--open" : ""}`}>
             <h3 id="demo-quote-title">{journey === "event" ? (es ? "Presupuesto orientativo" : "Sample event estimate") : (es ? "Tu presupuesto" : "Your estimate")}</h3>
-            <p>{liveQuantity}</p><div aria-live={quoteOpen ? "off" : "polite"} aria-atomic="true">{priceRows(quote)}</div>
+            {quote.lines.length > 0 && <p>{liveQuantity}</p>}<div aria-live={quoteOpen ? "off" : "polite"} aria-atomic="true">{priceRows(quote)}</div>
             <p className="demo-quote-shop">{shop.shortName}<br />{es ? shop.scheduleSummaryEs : shop.scheduleSummary}</p>
           </div>
         </aside>

@@ -3,6 +3,7 @@ import { Hero } from "@/components/Hero";
 import { BakeryFinderSection } from "@/components/BakeryFinderSection";
 import { GuidedChoiceSection } from "@/components/GuidedChoiceSection";
 import { BakeryTextureGallery } from "@/components/BakeryTextureGallery";
+import { BoxesSection } from "@/components/BoxesSection";
 import { LocationsSection } from "@/components/LocationsSection";
 import { HoneyvaultHighlights } from "@/components/HoneyvaultHighlights";
 import { LargeOrdersSection } from "@/components/LargeOrdersSection";
@@ -28,6 +29,10 @@ export default function Home() {
         </Reveal>
 
         <Reveal>
+          <BoxesSection />
+        </Reveal>
+
+        <Reveal>
           <LocationsSection />
         </Reveal>
 
@@ -40,11 +45,11 @@ export default function Home() {
         </Reveal>
 
         <Reveal>
-          <BrandOperationalInterlude />
+          <LargeOrderInquiry />
         </Reveal>
 
         <Reveal>
-          <LargeOrderInquiry />
+          <BrandOperationalInterlude />
         </Reveal>
       </main>
 

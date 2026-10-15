@@ -34,3 +34,9 @@ test("restoration keeps only known choices and never contact data", () => {
   assert.equal(restoreOrderDraft({ pastryId: "fake" }).pastryId, null);
   assert.equal(restoreOrderDraft(null).intent, null);
 });
+test("boxes can be searched and restored without admitting arbitrary IDs", () => {
+  assert.equal(findSearchMatches("little brunch")[0].id, "brunch-six");
+  assert.equal(findSearchMatches("caja para reunirnos")[0].kind, "box");
+  assert.equal(restoreOrderDraft({ boxId: "gathering-twelve" }).boxId, "gathering-twelve");
+  assert.equal(restoreOrderDraft({ boxId: "fake" }).boxId, "brunch-six");
+});

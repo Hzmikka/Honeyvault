@@ -23,6 +23,8 @@ export function BakeryFinderSection() {
   const es = language === "es";
   const items = useMemo(() => rotatingItems[language], [language]);
   const [itemIndex, setItemIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [interacting, setInteracting] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -39,12 +41,12 @@ export function BakeryFinderSection() {
   }, []);
 
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || paused || interacting) return;
     const interval = window.setInterval(() => {
       setItemIndex((current) => (current + 1) % items.length);
-    }, 2500);
+    }, 4500);
     return () => window.clearInterval(interval);
-  }, [prefersReducedMotion, items]);
+  }, [prefersReducedMotion, paused, interacting, items]);
 
   return (
     <section className="bakery-finder" aria-labelledby="bakery-finder-title">
@@ -60,7 +62,7 @@ export function BakeryFinderSection() {
           </span>
         </div>
 
-        <div className="bakery-finder-content">
+        <div className="bakery-finder-content" onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)} onFocus={() => setInteracting(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setInteracting(false); }}>
           <h1 className="bakery-finder-title" id="bakery-finder-title">
             <span>{es ? "Encuentra" : "Find"}</span>
             <span className="rotating-word-frame" aria-live="off">
@@ -70,6 +72,7 @@ export function BakeryFinderSection() {
             </span>
             <span>{es ? "en Miami" : "in Miami"}</span>
           </h1>
+          <button className="rotation-control" type="button" aria-pressed={paused} disabled={prefersReducedMotion} onClick={() => setPaused(current => !current)}>{prefersReducedMotion ? (es ? "Movimiento reducido" : "Reduced motion") : paused ? (es ? "Reanudar titular" : "Resume title") : (es ? "Pausar titular" : "Pause title")}</button>
 
           <div className="bakery-finder-actions" aria-label={es ? "Comprar en Honeyvault" : "Order Honeyvault pastries"}>
             <a className="bakery-order-button" href={commerceLinks.orderNow}>

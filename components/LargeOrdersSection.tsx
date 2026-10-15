@@ -1,76 +1,30 @@
 "use client";
 
 import Image from "next/image";
+import { useRef, useState } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { useOrder } from "@/components/OrderProvider";
 import { orderItems } from "@/data/orderItems";
 
-
 export function LargeOrdersSection() {
   const { language } = useLanguage();
-  const { draft, toggleSpecialItem } = useOrder();
+  const { draft, updateOrder, toggleSpecialItem } = useOrder();
   const es = language === "es";
-
-  return (
-    <section className="section large-orders" id="large-orders" aria-labelledby="large-orders-title">
-      <div className="container">
-        <div className="large-orders-heading">
-          <div>
-            <p className="large-orders-eyebrow">Honeyvault Bakery</p>
-            <h2 id="large-orders-title">{es ? "Pedidos grandes, horneados con belleza" : "Big orders, baked beautifully"}</h2>
-            <p>
-              {es
-                ? "Desde una caja hasta mesas completas de postres: lotes personalizados para cumpleaños, brunches, oficina, regalos y celebraciones."
-                : "From one box to full dessert tables — custom batches for birthdays, brunches, office treats, gifting, and celebrations."}
-            </p>
-          </div>
-          <span className="large-orders-note">{es ? "Preórdenes desde 1 caja" : "Pre-orders start at 1 box"}</span>
-        </div>
-
-        <div className="large-orders-gallery" aria-label={es ? "Opciones para pedidos grandes" : "Large order dessert options"}>
-          {orderItems.map((item) => {
-            const name = es ? item.nameEs : item.name;
-            return (
-              <button id={`order-item-${item.id}`} className="large-order-card" type="button" key={item.id} aria-label={name} aria-pressed={draft.specialItemIds.includes(item.id)} onClick={() => toggleSpecialItem(item.id)}>
-                <Image src={item.image} alt={name} fill sizes="(max-width: 768px) 72vw, 260px" />
-                <span>{draft.specialItemIds.includes(item.id) ? (es ? "Seleccionado · " : "Selected · ") : ""}{name}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <aside className="large-orders-cta" aria-labelledby="large-orders-cta-title">
-          <div className="large-orders-cta-main">
-            <h3 id="large-orders-cta-title">{es ? "¿Planeas algo más grande?" : "Planning something bigger?"}</h3>
-            <p className="large-orders-cta-intro">
-              {es
-                ? "De cumpleaños y brunches a oficina y reuniones grandes: cuéntanos qué planeas y te ayudaremos con cantidades, disponibilidad, recogida o entrega local."
-                : "From birthdays and brunches to office treats and larger gatherings, tell us what you're planning and we'll help with quantities, availability, pickup or local delivery."}
-            </p>
-
-            <div className="large-orders-paths">
-              <div className="large-orders-path">
-                <span className="large-orders-path-label">{es ? "Celebración o reunión" : "Celebration or gathering"}</span>
-                <p>{es ? "Cumpleaños, brunches, mesas de postres, regalos y momentos que requieren más que una compra normal." : "Birthdays, brunches, dessert tables, gifting and other moments that need more than a standard pastry run."}</p>
-              </div>
-              <div className="large-orders-path">
-                <span className="large-orders-path-label">{es ? "¿Para un negocio o equipo?" : "Ordering for a business or team?"}</span>
-                <p>{es ? "Desayunos de oficina, regalos para clientes, días de producción y pedidos para grupos grandes." : "Office breakfasts, client gifting, production days and larger group orders."}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="large-orders-actions">
-            <ul className="large-orders-details" aria-label={es ? "Detalles del pedido" : "Large order details"}>
-              <li>{es ? "Hecho por encargo" : "Made to order"}</li>
-              <li>{es ? "Recogida o entrega local" : "Pickup or local delivery"}</li>
-              <li>{es ? "Se recomienda pedir con antelación" : "Advance order recommended"}</li>
-            </ul>
-            <a className="large-orders-button" href="#large-order-inquiry">{es ? "Solicitar pedido grande" : "Request a large order"}</a>
-            <p>{es ? "Dinos la fecha, cantidad aproximada y qué estás planeando." : "Tell us the date, approximate quantity and what you're planning."}</p>
-          </div>
-        </aside>
-      </div>
-    </section>
-  );
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState(1);
+  function move(direction: number) {
+    const gallery = galleryRef.current;
+    if (!gallery) return;
+    const card = gallery.querySelector<HTMLElement>(".large-order-card");
+    gallery.scrollBy({ left: direction * ((card?.offsetWidth ?? 260) + 16), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  }
+  return <section className="section large-orders" id="large-orders" aria-labelledby="large-orders-title"><div className="container">
+    <div className="large-orders-heading"><div><p className="large-orders-eyebrow">{es ? "PARA REUNIR A TODOS" : "FOR THE WHOLE GATHERING"}</p><h2 id="large-orders-title">{es ? "Pequeños postres, grandes momentos." : "Small desserts. Big occasions."}</h2><p>{es ? "Elige los sabores y dinos cuántas personas vienen. Calculamos 2 mini postres por persona a $4.50 cada uno, con al menos 48 h de anticipación." : "Pick the flavors and tell us who's coming. We plan 2 mini desserts per guest at $4.50 each, with at least 48 hours notice."}</p></div><span className="large-orders-note">{es ? "Desde 6 personas · 12 minis" : "From 6 guests · 12 minis"}</span></div>
+    <div className="gallery-controls"><span aria-live="polite">{position} / {orderItems.length} · {draft.specialItemIds.length} {es ? "seleccionados" : "selected"}</span><div><button type="button" aria-label={es ? "Ver postres anteriores" : "Previous desserts"} disabled={position === 1} onClick={() => move(-1)}><ArrowLeft size={18} aria-hidden="true" /></button><button type="button" aria-label={es ? "Ver siguientes postres" : "Next desserts"} disabled={position === orderItems.length} onClick={() => move(1)}><ArrowRight size={18} aria-hidden="true" /></button></div></div>
+    <div className="large-orders-gallery" ref={galleryRef} aria-label={es ? "Selecciona mini postres para un evento" : "Select mini desserts for an event"} onScroll={event => { const gallery = event.currentTarget; const width = gallery.querySelector<HTMLElement>(".large-order-card")?.offsetWidth ?? 260; const end = gallery.scrollLeft >= gallery.scrollWidth - gallery.clientWidth - 3; setPosition(end ? orderItems.length : Math.min(orderItems.length, Math.round(gallery.scrollLeft / (width + 16)) + 1)); }}>
+      {orderItems.map(item => <button id={`order-item-${item.id}`} className="large-order-card" type="button" key={item.id} aria-label={es ? item.nameEs : item.name} aria-pressed={draft.specialItemIds.includes(item.id)} onClick={() => toggleSpecialItem(item.id)}><Image src={item.image} alt="" fill sizes="(max-width: 768px) 72vw, 260px" /><span>{draft.specialItemIds.includes(item.id) ? "✓ · " : ""}{es ? item.nameEs : item.name}</span></button>)}
+    </div>
+    <aside className="large-orders-cta" aria-labelledby="large-orders-cta-title"><div className="large-orders-cta-main"><h3 id="large-orders-cta-title">{es ? "Tu mesa, con todos los detalles claros." : "Your dessert table, clearly planned."}</h3><p className="large-orders-cta-intro">{es ? "Ejemplo: 24 personas → 48 minis → $216. Con presentación y montaje ($75) y entrega en 33127 ($8): $299 de presupuesto simulado." : "Example: 24 guests → 48 minis → $216. With presentation & setup ($75) and delivery to 33127 ($8): a $299 sample estimate."}</p><div className="large-orders-paths"><div className="large-orders-path"><span className="large-orders-path-label">{es ? "Siempre incluido" : "Always included"}</span><p>{es ? "Productos seleccionados, cantidades por sabor y cajas para transportar. Recogida sin cargo." : "Selected desserts, quantities per flavor and transport boxes. Pickup at no charge."}</p></div><div className="large-orders-path"><span className="large-orders-path-label">{es ? "Opcional con entrega" : "Optional with delivery"}</span><p>{es ? "Bases de exhibición y 30 min de montaje por $75. Mesa, flores, personal y desmontaje no incluidos. Entrega según ZIP." : "Display stands and 30 min setup for $75. Table, flowers, staff and teardown not included. Delivery is priced by ZIP."}</p></div></div></div><div className="large-orders-actions"><ul className="large-orders-details"><li>{es ? "Fecha flexible disponible" : "Flexible date available"}</li><li>{es ? "Sin datos de contacto" : "No contact details needed"}</li><li>{es ? "Cotización de muestra" : "Sample quote"}</li></ul><a className="large-orders-button" href="#large-order-inquiry" onClick={() => updateOrder({ intent: "large-order" })}>{es ? "Planear mi evento" : "Plan my event"}</a><p>{es ? "O empieza con un evento ya rellenado en el formulario." : "Or start with a filled-in sample event in the form."}</p></div></aside>
+  </div></section>;
 }

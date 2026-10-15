@@ -7,12 +7,16 @@ import { honeyvaultLocations } from "@/data/locations";
 import { getLocationOpenStatus } from "@/lib/locationStatus";
 import { useLanguage } from "@/components/LanguageProvider";
 import { useOrder } from "@/components/OrderProvider";
+import { deliveryZones } from "@/data/demoCommerce";
+import { money } from "@/lib/demoCommerce";
 import { commerceLinks } from "@/data/content";
 
 export function LocationsSection() {
   const { draft, updateOrder } = useOrder();
   const { language } = useLanguage();
   const es = language === "es";
+  const [zoneZip, setZoneZip] = useState("");
+  const selectedZone = deliveryZones.find(zone => zone.zip === zoneZip);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [now, setNow] = useState<Date | null>(null);
 
@@ -40,6 +44,8 @@ export function LocationsSection() {
             {es ? "Recogida o entrega local desde tres tiendas en Miami." : "Pickup or local delivery from three Miami locations."}
           </p>
         </header>
+
+        <div className="demo-zone-finder"><label htmlFor="demo-zone">{es ? "Encuentra una tienda por zona de ejemplo" : "Find a shop by sample area"}</label><select id="demo-zone" value={zoneZip} onChange={event => { setZoneZip(event.target.value); const zone = deliveryZones.find(item => item.zip === event.target.value); if (zone) updateOrder({ locationId: zone.locationId, fulfillment: "Pickup" }); }}><option value="">{es ? "Elige una zona" : "Choose an area"}</option><option value="33127">Wynwood · 33127</option><option value="33134">Coral Gables · 33134</option><option value="33139">South Beach · 33139</option><option value="00000">{es ? "Fuera de cobertura · 00000" : "Outside coverage · 00000"}</option></select><p role="status">{selectedZone ? (selectedZone.delivery ? `${es ? "Entrega de muestra" : "Sample delivery"}: ${money(selectedZone.feeCents)} · ${es ? "mínimo" : "minimum"} ${money(selectedZone.minimumCents)}. ${es ? "Recogida sin cargo." : "Pickup is free."}` : (es ? "Solo recogida en South Beach. No tiene entrega local." : "Pickup only at South Beach. No local delivery.")) : zoneZip ? (es ? "Fuera de la cobertura de entrega. Puedes elegir recogida en cualquiera de las tiendas." : "Outside delivery coverage. Choose pickup at any shop.") : (es ? "Tiendas, horarios, cobertura y tarifas ficticias para explorar la demo." : "Fictional shops, hours, coverage and fees for exploring the demo.")}</p></div>
 
         <div className="location-quick-grid">
           {honeyvaultLocations.map((location, index) => {

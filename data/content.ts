@@ -1,16 +1,17 @@
 export const commerceLinks = {
   browsePastries: "#textures",
   orderNow: "#textures",
-  getPastry: "#locations",
-  planBox: "#large-orders",
+  getPastry: "#large-order-inquiry",
+  planBox: "#boxes",
   locations: "#locations",
   inquiry: "#large-order-inquiry",
 };
 
 export const navLinks = [
   { label: "SHOP", labelEs: "PASTELES", href: "#textures" },
+  { label: "BOXES", labelEs: "CAJAS", href: "#boxes" },
   { label: "LOCATIONS", labelEs: "TIENDAS", href: "#locations" },
-  { label: "LARGE ORDERS", labelEs: "PEDIDOS GRANDES", href: "#large-orders" },
+  { label: "EVENTS", labelEs: "EVENTOS", href: "#large-orders" },
 ] as const;
 
 export const guidedChoices = [
@@ -29,7 +30,7 @@ export const guidedChoices = [
     titleEs: "Una caja para compartir",
     description: "Brunch, gifting & small groups",
     descriptionEs: "Brunch, regalos y grupos pequeños",
-    href: "#large-orders",
+    href: "#boxes",
     image: "/images/guide/box-to-share.webp",
   },
   {

@@ -28,7 +28,7 @@ export function BakeryTextureGallery() {
   const selectPastry = (index: number) => {
     setSelectedIndex(index);
     setPreviewIndex(null);
-    updateOrder({ pastryId: signaturePastries[index].id, intent: draft.intent ?? "pastry", occasion: draft.occasion || "Other" });
+    updateOrder({ pastryId: signaturePastries[index].id, intent: "pastry", occasion: draft.occasion || "Other" });
   };
 
   return (
@@ -39,7 +39,7 @@ export function BakeryTextureGallery() {
             <p>Honeyvault Bakery</p>
             <h2 id="texture-gallery-title">{es ? "Texturas distintivas" : "Signature textures"}</h2>
           </div>
-          <span>{es ? "Selecciona un pastel y prueba con los ojos." : "Select a pastry and taste with your eyes."}</span>
+          <span>{es ? "5 piezas del día · 30 min de preparación · precios de muestra." : "5 daily pastries · 30 min preparation · sample prices."}</span>
         </div>
 
         <div
@@ -67,6 +67,7 @@ export function BakeryTextureGallery() {
               >
                 <Image src={pastry.image} alt="" fill sizes="(max-width: 768px) 62vw, 330px" />
                 <span className="texture-card-sheen" aria-hidden="true" />
+                <span className="texture-card-label"><span>{name}</span><strong>{pastry.price}</strong></span>
               </button>
             );
           })}
@@ -74,6 +75,7 @@ export function BakeryTextureGallery() {
 
         <div className="texture-info-panel">
           <div className="texture-info-bubble">
+            <Image className="whole-pastry-photo" src={activePastry.wholeImage} alt={es ? `Pieza completa: ${activePastry.nameEs}` : `Whole pastry: ${activePastry.name}`} width={240} height={240} sizes="(max-width: 680px) 120px, 180px" />
             <div className="texture-info-copy">
               <div className="texture-info-title-row">
                 <h3 id="texture-info-title" aria-live="polite">{es ? activePastry.nameEs : activePastry.name}</h3>
@@ -82,11 +84,12 @@ export function BakeryTextureGallery() {
               <p>{es ? activePastry.detailEs : activePastry.detail}</p>
               <span className="texture-sensory">{es ? activePastry.sensoryEs : activePastry.sensory}</span>
               <span className="texture-allergens">{es ? activePastry.allergensEs : activePastry.allergens}</span>
+              <span className="texture-allergens">{es ? "Pieza individual · 12–15 cm aprox. · datos de muestra; consulta alérgenos reales antes de consumir." : "Single pastry · approx. 12–15 cm · sample details; verify real allergens before eating."}</span>
             </div>
 
-            <a className="texture-info-button" href={activePastry.orderHref ?? (draft.locationId ? commerceLinks.inquiry : commerceLinks.getPastry)} onClick={() => selectPastry(displayIndex)}>
+            <a className="texture-info-button" href={commerceLinks.inquiry} onClick={() => selectPastry(displayIndex)}>
               <ShoppingBag size={15} strokeWidth={2} aria-hidden="true" />
-              <span>{es ? "Conseguir este pastel" : "Get this pastry"}</span>
+              <span>{es ? "Elegir esta pieza" : "Choose this pastry"}</span>
               <ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" />
             </a>
           </div>

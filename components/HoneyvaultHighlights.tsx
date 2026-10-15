@@ -13,7 +13,7 @@ export function HoneyvaultHighlights() {
     <section className="section proof-section" id="proof" aria-labelledby="proof-title">
       <div className="container">
         <header className="proof-header">
-          <p className="proof-eyebrow">{es ? "LO QUE DICEN LOS CLIENTES" : "REAL GUEST LOVE"}</p>
+          <p className="proof-eyebrow">{es ? "RESEÑAS DE MUESTRA" : "SAMPLE GUEST NOTES"}</p>
           <h2 id="proof-title">{es ? "Por qué la gente vuelve." : "Why people come back."}</h2>
           <p className="proof-intro">
             {es ? "Un buen pastel llama la atención. La experiencia hace que vuelvan." : "Good pastry gets attention. The experience brings people back."}

@@ -1,120 +1,50 @@
 "use client";
 
-import { FormEvent, useState } from "react";
 import Image from "next/image";
-import { FileText, Search } from "lucide-react";
-import { commerceLinks, navLinks } from "@/data/content";
+import { FormEvent, useRef, useState } from "react";
+import { ArrowUpRight, Menu, Search } from "lucide-react";
+import { navLinks } from "@/data/content";
+import { honeyvaultLocations } from "@/data/locations";
 import { useLanguage } from "@/components/LanguageProvider";
 import { useOrder } from "@/components/OrderProvider";
-import { findSearchMatches } from "@/lib/search";
+import { findSearchMatches, SearchMatch } from "@/lib/search";
 import { navigateToSection } from "@/lib/navigation";
-import { honeyvaultLocations } from "@/data/locations";
 
 export function Header() {
   const { language, setLanguage } = useLanguage();
-  const es = language === "es";
   const { draft, updateOrder } = useOrder();
-  const [searchMessage, setSearchMessage] = useState("");
-
-  function handleSearch(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const query = String(formData.get("site-search") ?? "");
-    const matches = findSearchMatches(query);
-    const input = event.currentTarget.querySelector<HTMLInputElement>("input");
-    if (!matches.length) {
-      const message = query.trim()
-        ? (es ? "No encontramos coincidencias. Prueba con un pastel, tienda u ocasión." : "No matches found. Try a pastry, shop or occasion.")
-        : (es ? "Escribe un pastel, tienda u ocasión." : "Enter a pastry, shop or occasion.");
-      setSearchMessage(message);
-      input?.setCustomValidity(message);
-      input?.reportValidity();
-      return;
-    }
-    input?.setCustomValidity("");
-    const match = matches[0];
-    if (match.kind === "pastry") updateOrder({ pastryId: match.id, intent: draft.intent ?? "pastry", occasion: draft.occasion || "Other" });
+  const es = language === "es";
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDetailsElement>(null);
+  const matches = findSearchMatches(query);
+  const resultsVisible = open && !!query.trim();
+  function select(match: SearchMatch) {
+    if (match.kind === "pastry") updateOrder({ pastryId: match.id, intent: "pastry" });
+    if (match.kind === "box") updateOrder({ boxId: match.id, intent: "box" });
     if (match.kind === "location") {
-      const location = honeyvaultLocations.find(shop => shop.id === match.id);
-      updateOrder({ locationId: match.id, fulfillment: draft.fulfillment === "Local delivery" && !location?.fulfillment.localDelivery ? "Pickup" : draft.fulfillment });
+      const shop = honeyvaultLocations.find(location => location.id === match.id);
+      updateOrder({ locationId: match.id, fulfillment: draft.fulfillment === "Local delivery" && !shop?.fulfillment.localDelivery ? "Pickup" : draft.fulfillment });
     }
-    setSearchMessage(es ? `${matches.length} coincidencia(s). Mostrando ${match.nameEs}.` : `${matches.length} match(es). Showing ${match.name}.`);
-    navigateToSection(match.kind === "pastry" ? `pastry-${match.id}` : match.kind === "special-item" ? `order-item-${match.id}` : match.kind === "location" ? `location-${match.id}` : match.section);
-
+    setOpen(false);
+    navigateToSection(match.kind === "pastry" ? `pastry-${match.id}` : match.kind === "box" ? `box-${match.id}` : match.kind === "special-item" ? `order-item-${match.id}` : match.kind === "location" ? `location-${match.id}` : match.section);
   }
-
-  return (
-    <header className="site-header">
-      <a className="skip-link" href="#main-content">{es ? "Saltar al contenido" : "Skip to content"}</a>
-      <div className="container header-inner">
-        <a className="logo" href="#top" aria-label={es ? "Inicio de Honeyvault Bakery" : "Honeyvault Bakery home"}>
-          <Image
-            src="/images/logo/Primary-Logo.png"
-            alt="Honeyvault Bakery"
-            width={600}
-            height={362}
-            priority
-            sizes="128px"
-          />
-        </a>
-
-        <nav className="desktop-nav" aria-label={es ? "Navegación principal" : "Primary navigation"}>
-          {navLinks.map((link) => (
-            <a href={link.href} key={link.label}>
-              {es ? link.labelEs : link.label}
-            </a>
-          ))}
-        </nav>
-
-        <div className="header-actions">
-          <form className="search-pill" role="search" onSubmit={handleSearch}>
-            <label className="sr-only" htmlFor="site-search">
-              {es
-                ? "Buscar pasteles, tiendas y pedidos grandes"
-                : "Search pastries, locations and large orders"}
-            </label>
-            <input
-              id="site-search"
-              name="site-search"
-              type="search"
-              onChange={event => event.currentTarget.setCustomValidity("")}
-              placeholder={es ? "Buscar pasteles, tiendas u ocasiones..." : "Search pastries, locations, or occasions..."}
-            />
-            <button type="submit" aria-label={es ? "Buscar" : "Search"}>
-              <Search size={15} strokeWidth={2.1} />
-            </button>
-            <span className="sr-only" role="status" aria-live="polite">{searchMessage}</span>
-          </form>
-
-          <div className="language-toggle" aria-label={es ? "Idioma" : "Language"}>
-            <button
-              type="button"
-              className={language === "en" ? "active" : ""}
-              aria-pressed={language === "en"}
-              onClick={() => setLanguage("en")}
-            >
-              EN
-            </button>
-            <button
-              type="button"
-              className={language === "es" ? "active" : ""}
-              aria-pressed={language === "es"}
-              onClick={() => setLanguage("es")}
-            >
-              ES
-            </button>
-          </div>
-
-          <a className="inquiry-header-button" href={commerceLinks.inquiry}>
-            <FileText size={14} strokeWidth={2} aria-hidden="true" />
-            <span>{es ? "Planear" : "Plan order"}</span>
-          </a>
-
-          <a className="signin-button" href={commerceLinks.orderNow}>
-            {es ? "Pedir" : "Order"}
-          </a>
+  function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setOpen(true); if (matches.length) select(matches[0]); }
+  return <header className="site-header">
+    <a className="skip-link" href="#main-content">{es ? "Saltar al contenido" : "Skip to content"}</a>
+    <div className="demo-topline"><span>{es ? "Honeyvault es una demo · pedidos y precios de muestra" : "Honeyvault is a demo · sample orders & prices"}</span><a href="#studio">Celeste Web Studio <ArrowUpRight size={12} aria-hidden="true" /></a></div>
+    <div className="container header-inner">
+      <a className="logo" href="#top" aria-label={es ? "Inicio de Honeyvault Bakery" : "Honeyvault Bakery home"}><Image src="/images/logo/Primary-Logo.png" alt="Honeyvault Bakery" width={600} height={362} priority sizes="100px" /></a>
+      <nav className="desktop-nav" aria-label={es ? "Navegación principal" : "Primary navigation"}>{navLinks.map(link => <a href={link.href} key={link.label}>{es ? link.labelEs : link.label}</a>)}</nav>
+      <div className="header-actions">
+        <div className="site-search" onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false); }} onKeyDown={event => { if (event.key === "Escape") { setOpen(false); event.currentTarget.querySelector("input")?.focus(); } }}>
+          <form className="search-pill" role="search" onSubmit={submit}><label className="sr-only" htmlFor="site-search">{es ? "Buscar pasteles, cajas o tiendas" : "Search pastries, boxes or shops"}</label><input id="site-search" type="search" value={query} autoComplete="off" onChange={event => { setQuery(event.target.value); setOpen(true); }} onFocus={() => setOpen(true)} aria-controls={resultsVisible ? "search-results" : undefined} placeholder={es ? "Buscar pasteles, cajas..." : "Search pastries, boxes..."} /><button type="submit" aria-controls={resultsVisible ? "search-results" : undefined} aria-expanded={resultsVisible} aria-label={es ? "Buscar" : "Search"}><Search size={16} aria-hidden="true" /></button></form>
+          {resultsVisible && <div className="search-results" id="search-results"><p role="status">{matches.length ? `${matches.length} ${es ? "coincidencias" : "matches"}` : (es ? "No encontramos coincidencias." : "No matches found.")}</p>{matches.length ? <ul>{matches.map(match => <li key={`${match.kind}-${match.id}`}><a href={`#${match.section}`} onClick={event => { event.preventDefault(); select(match); }}>{es ? match.nameEs : match.name}<ArrowUpRight size={14} aria-hidden="true" /></a></li>)}</ul> : <><span>{es ? "Prueba «pistacho», «brunch» o «Coral Gables»." : "Try “pistachio”, “brunch” or “Coral Gables”."}</span><a href="#textures" onClick={() => setOpen(false)}>{es ? "Ver pasteles" : "Browse pastries"}</a><a href="#boxes" onClick={() => setOpen(false)}>{es ? "Ver cajas" : "Browse boxes"}</a></>}</div>}
         </div>
+        <div className="language-toggle" aria-label={es ? "Idioma" : "Language"}>{(["en", "es"] as const).map(value => <button type="button" key={value} className={language === value ? "active" : ""} aria-pressed={language === value} onClick={() => setLanguage(value)}>{value.toUpperCase()}</button>)}</div>
+        <a className="signin-button" href="#large-order-inquiry">{es ? "Probar pedido" : "Try an order"}</a>
+        <details className="compact-navigation" ref={menuRef}><summary>{es ? "Menú" : "Menu"}<Menu size={16} aria-hidden="true" /></summary><nav aria-label={es ? "Navegación móvil" : "Mobile navigation"}>{navLinks.map(link => <a href={link.href} key={link.label} onClick={() => { if (menuRef.current) menuRef.current.open = false; }}>{es ? link.labelEs : link.label}</a>)}<a href="#large-order-inquiry" onClick={() => { if (menuRef.current) menuRef.current.open = false; }}>{es ? "Probar pedido" : "Try an order"}</a></nav></details>
       </div>
-    </header>
-  );
+    </div>
+  </header>;
 }

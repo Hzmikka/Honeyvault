@@ -10,12 +10,14 @@ export type SignaturePastry = {
   allergens: string;
   allergensEs: string;
   image: string;
+  wholeImage: string;
   orderHref?: string;
 };
 
 export const signaturePastries: SignaturePastry[] = [
   {
     id: "almond-cream-croissant",
+    wholeImage: "/images/products/almond-cream-croissant.webp",
     name: "Almond Cream Croissant",
     nameEs: "Croissant de crema de almendra",
     price: "$7.95",
@@ -23,12 +25,13 @@ export const signaturePastries: SignaturePastry[] = [
     detailEs: "Crema de almendra, almendras tostadas y azúcar glas.",
     sensory: "Flaky · nutty · buttery",
     sensoryEs: "Hojaldrado · almendrado · mantecoso",
-    allergens: "Contains nuts · dairy",
-    allergensEs: "Contiene frutos secos · lácteos",
+    allergens: "Sample: wheat (gluten), milk, egg, nuts",
+    allergensEs: "Muestra: trigo (gluten), leche, huevo, frutos secos",
     image: "/images/close-up/croissant-almendras.webp",
   },
   {
     id: "pistachio-croissant",
+    wholeImage: "/images/products/pistachio-croissant.webp",
     name: "Pistachio Croissant",
     nameEs: "Croissant de pistacho",
     price: "$7.50",
@@ -36,12 +39,13 @@ export const signaturePastries: SignaturePastry[] = [
     detailEs: "Crema de pistacho, hojaldre laminado y pistacho triturado.",
     sensory: "Crisp · pistachio-rich · creamy",
     sensoryEs: "Crujiente · intenso a pistacho · cremoso",
-    allergens: "Contains nuts · dairy",
-    allergensEs: "Contiene frutos secos · lácteos",
+    allergens: "Sample: wheat (gluten), milk, egg, nuts",
+    allergensEs: "Muestra: trigo (gluten), leche, huevo, frutos secos",
     image: "/images/close-up/croissant-pistacho.webp",
   },
   {
     id: "vanilla-glazed-roll",
+    wholeImage: "/images/products/vanilla-glazed-roll.webp",
     name: "Vanilla Glazed Roll",
     nameEs: "Roll glaseado de vainilla",
     price: "$6.25",
@@ -49,12 +53,13 @@ export const signaturePastries: SignaturePastry[] = [
     detailEs: "Espiral laminada suave, glaseado de vainilla y corteza dorada.",
     sensory: "Soft · vanilla · glazed",
     sensoryEs: "Suave · vainilla · glaseado",
-    allergens: "Contains dairy · gluten",
-    allergensEs: "Contiene lácteos · gluten",
+    allergens: "Sample: wheat (gluten), milk, egg",
+    allergensEs: "Muestra: trigo (gluten), leche, huevo",
     image: "/images/close-up/roll-glaseado-blanco.webp",
   },
   {
     id: "chocolate-roll",
+    wholeImage: "/images/products/chocolate-roll.webp",
     name: "Chocolate Roll",
     nameEs: "Roll de chocolate",
     price: "$6.95",
@@ -62,12 +67,13 @@ export const signaturePastries: SignaturePastry[] = [
     detailEs: "Espiral de cacao, chocolate brillante y capas caramelizadas.",
     sensory: "Chocolatey · glossy · caramelized",
     sensoryEs: "Chocolate · brillante · caramelizado",
-    allergens: "Contains dairy · gluten",
-    allergensEs: "Contiene lácteos · gluten",
+    allergens: "Sample: wheat (gluten), milk, egg",
+    allergensEs: "Muestra: trigo (gluten), leche, huevo",
     image: "/images/close-up/roll-chocolate.webp",
   },
   {
     id: "strawberry-cream-croissant",
+    wholeImage: "/images/products/strawberry-cream-croissant.webp",
     name: "Strawberry Cream Croissant",
     nameEs: "Croissant de fresa y crema",
     price: "$7.75",
@@ -75,8 +81,8 @@ export const signaturePastries: SignaturePastry[] = [
     detailEs: "Fresa fresca, crema de vainilla y hojaldre laminado crujiente.",
     sensory: "Fruity · creamy · flaky",
     sensoryEs: "Frutal · cremoso · hojaldrado",
-    allergens: "Contains dairy · gluten",
-    allergensEs: "Contiene lácteos · gluten",
+    allergens: "Sample: wheat (gluten), milk, egg",
+    allergensEs: "Muestra: trigo (gluten), leche, huevo",
     image: "/images/close-up/croissant-fresa-crema.webp",
   },
 ];

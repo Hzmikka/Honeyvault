@@ -1,99 +1,51 @@
-# Honeyvault Bakery — Portfolio Final
+# Honeyvault Bakery — interactive portfolio demo
 
-Decision-led bilingual Starter website for a fictional Miami bakery portfolio concept. The final build keeps Honeyvault's sensory identity while organizing the customer journey around desire, fast orientation, product choice, fulfillment, proof, larger-order conversion, and a compact branded close.
+A bilingual EN/ES bakery concept by Celeste Web Studio. Pink and cocoa visuals, texture photography, whole-product views, and three complete simulated journeys:
 
-## Run locally
+- Daily pastry → pieces → pickup or delivery → priced summary.
+- Fixed 6/12-piece box → number of boxes → date and fulfillment → priced summary.
+- Event → guests and minis → date or flexible date → sample quote, with an optional filled-in example.
+
+**This is a fictional demo. No purchases, reservations, payments or messages are sent.** The configurator calculates in the browser; no name or contact details are required. The legacy `/api/large-order` endpoint always returns `demo: true` and never calls a webhook, even if `LEAD_WEBHOOK_URL` is set.
+
+## Local development and validation
+
+Use Node 22 (see `.nvmrc`), then:
 
 ```bash
-npm install
+npm ci
 npm run dev
-```
-
-Open `http://localhost:3000`.
-
-## Production build
-
-```bash
-npm run build
-npm run start
-```
-
-## Deploy to Vercel
-
-1. Push this project folder to GitHub.
-2. Import the repository in Vercel.
-3. Framework preset: **Next.js**.
-4. Build command: `npm run build`.
-5. Output directory: leave the Next.js default.
-6. Node.js: **22.x** (the repository includes `.nvmrc` / `.node-version`).
-7. Optional: add `LEAD_WEBHOOK_URL` if you want the large-order form to deliver real leads.
-
-Without `LEAD_WEBHOOK_URL`, the inquiry form stays in explicit portfolio-demo mode and tells the visitor that no real request was sent.
-
-## Final customer journey
-
-1. `Hero` — sensory identity.
-2. `BakeryFinderSection` — rotating intent line, Order now, Plan a box, compact location cue.
-3. `GuidedChoiceSection` — visual situation-based navigation that keeps desire active.
-4. `BakeryTextureGallery` — five signature pastries with hover preview + persistent selection.
-5. `LocationsSection` — shop choice, live weekly-hour status, pickup/delivery, directions and map support.
-6. `HoneyvaultHighlights` — proof section with counter-handoff image and two clearly labeled demo guest notes.
-7. `LargeOrdersSection` — preserved product gallery + qualified celebration/business routes.
-8. `BrandOperationalInterlude` — branded statement plus freshness and fulfillment information.
-9. `LargeOrderInquiry` — qualified large-order inquiry form.
-10. `Footer` — compact recovery navigation, contact, and demo disclosure.
-
-## Final interaction details
-
-- Header includes both **Order** and **Plan order** CTAs.
-- EN/ES language toggle updates the full visible interface and persists in local storage.
-- Search recognizes common English and Spanish intents and scrolls to the relevant section.
-- Demo location order buttons stay inside the portfolio instead of opening placeholder `example.com` links.
-- All internal anchors were checked for matching section IDs.
-- Reduced-motion behavior is respected.
-- Product, occasion and shop choices follow the visitor into the inquiry form and persist for the tab session without storing contact information.
-- Shop order buttons lead to the inquiry form; the special-order gallery supports selection with mouse, touch and keyboard.
-- Search resolves actual bilingual products and shops and reports queries with no matches.
-- The form distinguishes people from pieces, asks for pickup shop or delivery ZIP, accepts flexible dates and validates dates/contact on both client and server.
-- Successful requests include a reviewable summary. Webhook failures preserve form data and return a delivery error; demo submissions never confirm a purchase.
-- Mobile and desktop layouts have separate spacing caps so large monitors do not create unnecessary empty vertical space.
-
-## Image optimization
-
-The final public image set has been reduced to only referenced assets. The previously oversized mobile hero was recompressed from ~2.1 MB to ~0.12 MB while retaining its dimensions. Run:
-
-```bash
-npm run audit:images
-```
-
-for the current image report.
-
-## Main data files
-
-- `data/content.ts`
-- `data/pastries.ts`
-- `data/locations.ts`
-- `data/proof.ts`
-- `data/brandInterlude.ts`
-- `data/contact.ts`
-- `data/inquiry.ts`
-- `data/footer.ts`
-
-## Brand palette
-
-- Cherry Blossom: `#F5CBD9`
-- Midnight Cocoa: `#2E1B1B`
-
-## Portfolio disclaimer
-
-Honeyvault Bakery is a fictional portfolio concept. Demo pricing, reviews, location details, allergen language and operational availability must be replaced with verified client information before any real commercial launch.
-
-## Friction audit and checks
-
-See [docs/friction-triage.md](docs/friction-triage.md) for the technical changes, visual decisions reserved for discussion, and business information still needed.
-
-```bash
 npm test
 npm run lint
 npm run build
 ```
+
+Run `npm run start` after building. `npm run audit:images` reports assets.
+
+## Fictional commerce rules
+
+`data/demoCommerce.ts` owns the sample boxes, delivery areas and event pricing. `lib/demoCommerce.ts` calculates exact USD cents and validates quantities, stock, delivery minima, dates and shop slots in Miami time.
+
+- Pastries: 30 minutes preparation; 1–24 pieces.
+- Boxes: 24 hours notice; 1–10 boxes. Six pieces cost $42; twelve cost $80. Equal quantities of almond, pistachio and chocolate.
+- Events: 48 hours notice or flexible date; 6–200 guests, 2 minis per guest at $4.50 each. Selected flavors receive a balanced allocation. Setup adds $75 with delivery.
+- Delivery: ZIP 33127 → Wynwood, $8 fee / $20 product minimum; 33134 → Coral Gables, $10 / $25; 33139 → South Beach pickup only. Other ZIPs are outside sample delivery coverage. Pickup is free.
+- Sample prices include tax; there is no additional tax calculation.
+- Pistachio is unavailable today at Wynwood; vanilla is unavailable today at South Beach. Future preorders are available. These fixtures do not represent live inventory.
+- Slots follow each shop's hours, including Coral Gables' Sunday closure, and daylight saving time. Availability is revalidated at simulation time.
+
+Language is stored in localStorage. Only sanitized product/shop/fulfillment choices are kept in sessionStorage. Date, ZIP and optional event name stay in component memory.
+
+## Deployment
+
+The existing Vercel project is linked to `Hzmikka/Honeyvault`; GitHub `main` is the production source. Next.js preset, `npm run build`, default output. No environment variables are required for the demo. Do not enable real lead delivery on this portfolio.
+
+## Content and assets
+
+- `data/pastries.ts`, `data/orderItems.ts`: daily pastries and event minis.
+- `data/locations.ts`: sample shops, hours and fulfillment.
+- `data/demoCommerce.ts`: shared fictional commerce fixtures.
+- `docs/friction-triage.md`: disposition of all 42 friction findings.
+- `docs/generated-assets.md`: generated whole-product imagery and exact prompts.
+
+Allergen and size information, images, addresses, reviews, stock, fees and operational terms are illustrative. Replace them with verified business information before a commercial launch.

@@ -1,3 +1,4 @@
+import { demoBoxes } from "../data/demoCommerce";
 import { signaturePastries } from "../data/pastries";
 import { orderItems } from "../data/orderItems";
 import { honeyvaultLocations } from "../data/locations";
@@ -7,6 +8,7 @@ export type OrderIntent = "pastry" | "box" | "celebration" | "large-order" | nul
 export type OrderDraft = {
   intent: OrderIntent;
   pastryId: string | null;
+  boxId: string;
   specialItemIds: string[];
   locationId: string | null;
   occasion: string;
@@ -14,7 +16,7 @@ export type OrderDraft = {
 };
 
 export const emptyOrderDraft: OrderDraft = {
-  intent: null, pastryId: null, specialItemIds: [], locationId: null,
+  intent: null, pastryId: null, boxId: "brunch-six", specialItemIds: [], locationId: null,
   occasion: "", fulfillment: "",
 };
 
@@ -24,6 +26,7 @@ export function restoreOrderDraft(value: unknown): OrderDraft {
   const input = value as Record<string, unknown>;
   return {
     intent: ["pastry", "box", "celebration", "large-order"].includes(String(input.intent)) ? input.intent as OrderIntent : null,
+    boxId: demoBoxes.some(box => box.id === input.boxId) ? String(input.boxId) : "brunch-six",
     pastryId: signaturePastries.some(item => item.id === input.pastryId) ? String(input.pastryId) : null,
     specialItemIds: Array.isArray(input.specialItemIds)
       ? orderItems.filter(item => (input.specialItemIds as unknown[]).includes(item.id)).map(item => item.id) : [],

@@ -47,7 +47,7 @@ function DeliveryCopy({ mobile = false, es = false }: { mobile?: boolean; es?: b
     <article className={mobile ? "brand-art-copy brand-art-copy--mobile brand-art-copy--delivery" : "brand-art-copy brand-art-copy--delivery"}>
       <span className="brand-art-card-pill brand-art-card-pill--order" aria-hidden="true">{es ? "Pide antes" : "Order ahead"}</span>
       <h3><span>Miami</span><span>{es ? "Recogida y" : "Pickup &"}</span><span>{es ? "Entrega" : "Delivery"}</span></h3>
-      <p>{es ? "Disfruta tus pasteles favoritos donde estés en Miami. Recogida o entrega local." : "Enjoy your favorite pastries wherever you are in Miami. Pickup or local delivery."}</p>
+      <p>{es ? "Tus pasteles favoritos, para recoger o recibir en los ZIP de muestra 33127 y 33134." : "Your favorite pastries, with pickup or delivery to sample ZIPs 33127 and 33134."}</p>
       <ul>
         <li><MapPin aria-hidden="true" /><span>{es ? `Recogida en ${locationCount} tiendas de Miami` : `Pickup at ${locationCount} Miami shops`}</span></li>
         <li><Truck aria-hidden="true" /><span>{es ? fulfillmentFacts[0].es : fulfillmentFacts[0].en}</span></li>

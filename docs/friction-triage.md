@@ -1,59 +1,42 @@
-# Honeyvault: separación de fricciones
+# Honeyvault: cierre de fricciones para la demo
 
-Revisión: 14 de octubre de 2026. Los números corresponden a la auditoría de 42 hallazgos.
+Actualizado el 15 de octubre de 2026. Implementación autorizada de los cambios técnicos y visuales. Los números conservan la auditoría original de 42 hallazgos.
 
-Esta entrega corrige funcionamiento y accesibilidad con las imágenes, fuentes, paleta, estructura de secciones y estilos existentes. Los campos condicionales, mensajes de validación y estados de selección utilizan los componentes y estilos del formulario actual. El recorrido termina en una solicitud con resumen, pendiente de confirmación; el modo demo no procesa compras.
+La demo tiene tres recorridos completos: piezas diarias, cajas de surtido fijo y eventos. Las reglas de precios, preparación, horarios, stock y entrega son ficticias, consistentes y visibles. No se procesa ninguna compra ni se envían solicitudes.
 
-## Cambios técnicos
-
-| Hallazgos | Corrección |
+| Hallazgos | Solución en la demo |
 | --- | --- |
-| 1, 2 | Producto y tienda se conservan entre secciones; los botones de tienda llevan a la solicitud, cerrando el circuito catálogo–tiendas–catálogo. |
-| 3 | Cada ruta guarda su intención y una ocasión inicial. Continúan usando las secciones existentes; las diferencias visuales quedan pendientes. |
-| 5, 39 | Las nueve tarjetas son botones accesibles con selección múltiple, estado pulsado y soporte de teclado. La selección llega al formulario y al resumen. |
-| 14 | Se muestra el horario de los datos existentes en EN/ES, incluido el cierre dominical de Coral Gables. |
-| 19 | Personas y piezas son unidades explícitas; piezas exige un entero positivo, personas usa rangos. |
-| 20, 21 | Recogida pide tienda; entrega pide ZIP; se puede indicar hora. Se respeta la restricción de entrega de South Beach. El ZIP no afirma cobertura ni costes. |
-| 22, 23 | Validación compartida entre cliente y API: fecha válida no pasada en la zona horaria de Miami, contacto con formato válido, cantidades, opciones y productos conocidos. |
-| 24, 25 | Fecha por definir disponible; campos obligatorios identificados antes del envío. |
-| 27, 28 | Errores por campo; datos conservados ante fallo; timeout; resumen tras éxito con productos, tienda, unidad, fecha/hora, modalidad y contacto. Se distingue solicitud de pedido confirmado. |
-| 30 | El buscador localiza productos y tiendas concretos en EN/ES, admite acentos y muestra un error nativo cuando no hay coincidencias. La lista visual de múltiples resultados queda para discutir. |
-| 37, 38 | Instrucción válida para toque, clic y teclado; `h1`, enlace para saltar al contenido y foco al navegar por búsqueda. |
-| 41 | Se elimina el email ficticio como acción de contacto; la solicitud sigue disponible. Un email real puede configurarse en `data/contact.ts`. |
+| 1, 2 | Las elecciones de producto, caja, sabores, modalidad y tienda siguen al visitante; los botones de tienda y producto llegan al configurador. |
+| 3 | Cada recorrido tiene campos y unidades propios: piezas, cajas o personas. El pedido diario no pide datos de evento. |
+| 4, 6 | Cajas de 6 y 12 piezas, con cantidades exactas por sabor, personas sugeridas, precio, mínimo de una caja y número de cajas explícito. |
+| 5, 39 | Nueve mini postres seleccionables con ratón, toque y teclado, estado persistente y selección visible en el formulario y resumen. |
+| 7 | Stock de muestra: pistacho agotado hoy en Wynwood; vainilla agotada hoy en South Beach. Se ofrecen otra tienda o una fecha posterior. |
+| 8, 17 | Preparación de 30 minutos, 24 horas o 48 horas según recorrido. Solo se ofrecen franjas que respetan anticipación, apertura, cierre y domingo cerrado en Coral Gables. Hora de Miami con horario de verano. |
+| 9, 10 | Nombres y precios visibles en las tarjetas; pieza completa junto a cada textura; cajas representadas con el número exacto de piezas. |
+| 11, 12 | Menú diario separado de cajas y minis por encargo. Tamaño y alérgenos homogéneos y señalados como ejemplos. |
+| 13, 14 | Selector de zona de muestra con tienda recomendada; horarios semanales visibles y estado de apertura por hora de Miami. |
+| 15, 16 | Cobertura de ejemplo: 33127 ($8, mínimo $20), 33134 ($10, mínimo $25), 33139 solo recogida, otros ZIP fuera de cobertura. Alternativa de recogida y desglose de costes. |
+| 18 | Productos y cajas incluidos. Presentación y 30 min de montaje opcionales por $75 con entrega; mesa, flores, personal y desmontaje excluidos. |
+| 19 | La ruta fija la unidad. Eventos calculan dos minis por persona y distribuyen todas las piezas entre los sabores, incluso si el reparto no es exacto. |
+| 20, 21 | Recogida pide tienda; entrega pide ZIP y determina la tienda correspondiente. Cambiar a recogida elimina entrega y montaje del presupuesto. |
+| 22, 23 | Cantidades enteras con límites, productos conocidos, cobertura, mínimo, stock, fechas y franjas se validan antes del resumen. Fechas imposibles o pasadas no pasan. |
+| 24, 25 | Fecha flexible solo en eventos. Campos opcionales identificados; el evento puede rellenarse con un ejemplo, sin contacto personal. |
+| 26 | El resumen explica el siguiente paso hipotético: pago y confirmación para piezas/cajas, revisión, cotización y depósito para eventos. |
+| 27, 28 | Errores con recuperación y foco; resumen de productos, cantidades, tienda, fecha/hora, modalidad y desglose. Se indica que no se ha comprado, reservado ni enviado nada. |
+| 29 | El configurador se ejecuta localmente, sin POST ni datos de contacto. Solo elecciones no personales se conservan en sessionStorage. La API anterior permanece compatible pero nunca invoca un webhook, incluso si existe LEAD_WEBHOOK_URL. |
+| 30 | Lista visible de múltiples resultados reales en EN/ES, acentos, cajas y tiendas; sin coincidencias se ofrecen ejemplos y enlaces al catálogo. Escape cierra la lista. |
+| 31 | Rutas de pasteles, cajas y eventos accesibles antes de la imagen principal; se conserva el hero sensorial. |
+| 32 | El bloque editorial queda después del configurador. |
+| 33 | Rotación más lenta, pausa manual y al interactuar, con respeto de reduced motion. |
+| 34, 35 | Texto y controles mayores, formularios en una columna en móvil y menú compacto que reemplaza la navegación oculta. |
+| 36 | Flechas, posición de la galería y número de productos seleccionados. |
+| 37, 38 | Instrucciones independientes del hover; enlaces, botones nativos, estados pulsados, etiquetas, foco, h1 y salto al contenido. |
+| 40, 41, 42 | Aviso de demo desde el inicio, sin contactos ficticios de la pastelería; autoría y CTA real a Celeste Web Studio al finalizar y en el pie. |
 
-Las elecciones no personales se conservan en `sessionStorage`. No se guardan nombre, contacto ni notas del formulario en el almacenamiento del navegador. El idioma sigue en `localStorage`, tolerando que el navegador no permita usarlo.
+## Criterios para una futura versión comercial
 
-## Decisiones visuales para revisar con Cami
-
-| Hallazgos | Decisión pendiente |
-| --- | --- |
-| 4, 9 | Presentación de cajas y comparación de productos: tarjetas, nombres/precios visibles, configurador o selección guiada. La composición de las cajas también requiere datos. |
-| 10 | Fotografías de piezas completas y referencias de tamaño, manteniendo las fotos de textura. |
-| 13 | Interfaz para encontrar la tienda más cercana: zona, ZIP, distancias o mapa comparativo. Requiere datos de ubicación y un método de cálculo. |
-| 30 | Presentación de varias coincidencias del buscador y alternativas sin resultados. |
-| 31 | Proporción del hero y posición del mensaje/CTA en la primera pantalla. |
-| 32 | Posición del bloque editorial respecto al formulario. |
-| 33 | Mantener, pausar o sustituir la rotación del titular. |
-| 34 | Tamaños de tipografía, jerarquía y controles en móvil. |
-| 35 | Forma de la navegación móvil que sustituya los enlaces ocultos: menú, barra compacta u otra composición. |
-| 36 | Flechas, contador o pistas para la galería horizontal. |
-| 40 | Ubicación y redacción del contexto de demo desde el inicio. El formulario ahora avisa antes del envío. |
-| 42 | Atribución de Celeste y salida comercial hacia el estudio, con ubicación y texto acordados. |
-
-## Información que requiere decisiones del negocio
-
-| Hallazgos | Datos pendientes |
-| --- | --- |
-| 4, 6 | Piezas, combinaciones, personas recomendadas, precios y mínimos de cajas/lotes. |
-| 7 | Disponibilidad por producto, tienda y fecha; fuente del stock. |
-| 8, 17 | Anticipación, preparación, franjas y límites para pedidos del mismo día. |
-| 11 | Ingredientes y alérgenos verificados, incluyendo política de contaminación cruzada. |
-| 12 | Alcance del menú y distinción entre menú diario y productos por encargo. |
-| 15, 16 | Cobertura, tarifas y mínimos de entrega. |
-| 18 | Qué incluye el servicio de mesas de postres: productos, presentación, transporte y/o montaje. |
-| 26 | Plazo/canal de respuesta, cotización, depósito, pago y cuándo se confirma el encargo. |
-| 29 | Tratamiento y conservación de datos cuando se configure una recepción real de solicitudes. |
+Los datos operativos son fixtures, no afirmaciones sobre negocios reales. Antes de vender harían falta precios, recetas y alérgenos verificados, cobertura real, stock, pagos, gestión de pedidos, política de privacidad y datos de contacto del negocio. Estas integraciones no forman parte de la demo.
 
 ## Validación
 
-`npm test` comprueba búsquedas, restauración de elecciones, fechas de Miami, contactos, unidades, tiendas, entrega, productos y respuestas de la API. Las pruebas del webhook sustituyen `fetch`; no envían mensajes. `npm run lint` y `npm run build` comprueban la integración y los tipos.
+`npm test` comprueba cálculos en centavos, reparto, anticipación, cierres, zona horaria, stock, cobertura, mínimos, validaciones, búsqueda, restauración y la prohibición de envíos reales. `npm run lint` y `npm run build` comprueban la integración y tipos. La comprobación pública tras publicar recorre los tres flujos y sus resúmenes.

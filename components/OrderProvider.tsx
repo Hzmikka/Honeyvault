@@ -36,7 +36,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
   const toggleSpecialItem = useCallback((id: string) => {
     setDraft(current => restoreOrderDraft({
       ...current,
-      intent: current.intent === "box" || current.intent === "celebration" ? current.intent : "large-order",
+      intent: current.intent === "celebration" ? current.intent : "large-order",
       specialItemIds: current.specialItemIds.includes(id)
         ? current.specialItemIds.filter(item => item !== id) : [...current.specialItemIds, id],
     }));

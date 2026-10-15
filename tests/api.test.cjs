@@ -26,18 +26,17 @@ test("API rejects client-bypassed invalid contact and past date", async () => {
 test("API rejects malformed JSON shape", async () => {
   for (const data of [null, [], "invalid"]) assert.equal((await POST(request(data))).status, 400);
 });
-test("webhook connection failures are reported as delivery failures, not bad input", async () => {
+test("demo never calls a configured webhook", async () => {
   const savedWebhook = process.env.LEAD_WEBHOOK_URL;
   const savedFetch = global.fetch;
   process.env.LEAD_WEBHOOK_URL = "https://example.invalid/test-only";
-  let forwarded;
-  global.fetch = async (_url, options) => { forwarded = JSON.parse(options.body); throw new Error("test connection failure"); };
+  let calls = 0;
+  global.fetch = async () => { calls++; throw new Error("Demo must not send anything"); };
   try {
     const response = await POST(request(body));
-    assert.equal(response.status, 502);
-    assert.equal((await response.json()).code, "delivery-failed");
-    assert.equal(forwarded.language, "es");
-    assert.equal(forwarded.shop, "Honeyvault Coral Gables");
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).demo, true);
+    assert.equal(calls, 0);
   } finally {
     global.fetch = savedFetch;
     if (savedWebhook === undefined) delete process.env.LEAD_WEBHOOK_URL;

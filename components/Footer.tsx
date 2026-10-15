@@ -44,12 +44,14 @@ export function Footer() {
 
           <nav className="footer-column" aria-label={es ? "Contacto" : "Contact"}>
             <h3>{es ? "Contacto" : "Contact"}</h3>
-            <a href="#large-order-inquiry">{es ? "Solicitud de pedido grande" : "Large-order request"}</a>
+            <a href="#large-order-inquiry">{es ? "Probar un pedido" : "Try an order"}</a>
             {contactLinks.email ? <a href={contactLinks.email}>{es ? "Enviar email" : "Email us"}</a> : null}
             {contactLinks.whatsapp ? <a href={contactLinks.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a> : null}
           </nav>
         </div>
       </div>
+
+      <div className="container studio-credit" id="studio"><div><p>Celeste Web Studio</p><h2>{es ? "¿Tu negocio podría verse así?" : "Could this be your business?"}</h2><span>{es ? "Honeyvault es una marca ficticia creada para mostrar una experiencia web completa." : "Honeyvault is a fictional brand built to showcase a complete web experience."}</span></div><a className="demo-button" href="mailto:celestewebstudio@gmail.com?subject=Quiero%20una%20web%20como%20Honeyvault">{es ? "Quiero una web así" : "I want a website like this"}<ArrowUpRight size={16} aria-hidden="true" /></a></div>
 
       <div className="footer-bottom">
         <div className="container footer-bottom-inner">

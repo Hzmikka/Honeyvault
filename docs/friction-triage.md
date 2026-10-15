@@ -40,3 +40,5 @@ Los datos operativos son fixtures, no afirmaciones sobre negocios reales. Antes 
 ## Validación
 
 `npm test` comprueba cálculos en centavos, reparto, anticipación, cierres, zona horaria, stock, cobertura, mínimos, validaciones, búsqueda, restauración y la prohibición de envíos reales. `npm run lint` y `npm run build` comprueban la integración y tipos. La comprobación pública tras publicar recorre los tres flujos y sus resúmenes.
+
+Comprobación pública del 15 de octubre: recorrido de 3 pistachos con alternativa a Coral Gables ($22.50), 2 cajas de seis ($84) y evento de 24 personas con montaje y entrega ($299). Búsqueda con cinco coincidencias para «crema», alternativas para una consulta sin resultados y cierre con Escape verificados. Imágenes nuevas visibles cargadas correctamente. Revisión visual en escritorio; reglas de adaptación móvil revisadas en CSS, sin emulación de dispositivo.

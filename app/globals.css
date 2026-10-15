@@ -4430,3 +4430,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .demo-button { transition: none; }
   .demo-button:hover { transform: none; }
 }
+
+/* Keep both box sizes and prices comparable without a taller 12-piece tray. */
+.demo-box-tray { aspect-ratio: 3 / 2; grid-auto-rows: minmax(0, 1fr); }
+.demo-box-tray > div { aspect-ratio: auto; min-height: 0; }
+.demo-box-tray--twelve { grid-template-columns: repeat(4, minmax(0, 1fr)); }
